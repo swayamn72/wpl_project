@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Home.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+    <title>Navbar with Calendar</title>
+    <style>
+        .calendar-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .calendar-section .date {
+            font-size: 14px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light px-3">
+        <a class="navbar-brand">Navbar</a>
+        <div class="calendar-section">
+            <i class="bi bi-calendar3"></i> 
+            <span class="date" id="selected-date"></span>
+
+        </div>
+    </nav>
+<div class="left-bar">
+
+<div class="user-profile">
+
+    <h6>Name</h6>
+    <p>Gender, Age</p>
+</div>
+<ul>
+    <li>Home</li>
+    <li>Workouts</li>
+    <li>Diet</li>
+</ul>
+
+<h5 id="month-name"></h5>
+<div id="heatmap" class="heatmap"></div>
+
+
+</div>
+
+<div class="content">
+    <h1>Main Content</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse faucibus, est id scelerisque mollis, odio urna feugiat eros, at vehicula ex magna eu enim.</p>
+    <div class="card" style="padding: 20px; border: 1px solid #ddd; margin-bottom: 20px;">
+        This is a card.
+    </div>
+    <div class="card" style="padding: 20px; border: 1px solid #ddd; margin-bottom: 20px;">
+        Another card with content.
+    </div>
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-QmSTpSKA3yACzNPhzr6ZBBy2CPVvjn2KfKHG7q5kmu3rqaX6sKN7vsjP/EnNE6U7" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+       
+        document.addEventListener("DOMContentLoaded", function () {
+           
+            const today = new Date();
+            document.getElementById("selected-date").textContent = `Today, ${formatDate(today)}`;
+
+            flatpickr("#selected-date", {
+                onChange: function(selectedDates, dateStr) {
+                    document.getElementById("selected-date").textContent = dateStr;
+                }
+            });
+
+
+        });
+    </script>
+    <script>
+       
+    const now = new Date();
+    const month = now.getMonth(); 
+    const year = now.getFullYear();
+    const daysInMonth = new Date(year, month + 1, 0).getDate(); 
+
+
+    const monthName = now.toLocaleString('default', { month: 'long' });
+    document.getElementById('month-name').textContent = `${monthName} ${year} Progress`;
+
+   
+    const heatmap = document.getElementById('heatmap');
+
+  
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dayDiv = document.createElement('div');
+      dayDiv.classList.add('day', 'white'); 
+      dayDiv.textContent = i;
+
+     
+      dayDiv.addEventListener('click', () => {
+        if (dayDiv.classList.contains('white')) {
+          dayDiv.classList.remove('white');
+          dayDiv.classList.add('green'); 
+        } else if (dayDiv.classList.contains('green')) {
+          dayDiv.classList.remove('green');
+          dayDiv.classList.add('red');
+        } else if (dayDiv.classList.contains('red')) {
+          dayDiv.classList.remove('red');
+          dayDiv.classList.add('white'); 
+        }
+      });
+
+      
+      heatmap.appendChild(dayDiv);
+    }
+
+   
+    const firstDayOffset = new Date(year, month, 1).getDay(); 
+    for (let i = 0; i < firstDayOffset; i++) {
+      const emptyDiv = document.createElement('div');
+      emptyDiv.classList.add('day');
+      emptyDiv.style.visibility = 'hidden'; 
+      heatmap.prepend(emptyDiv); 
+    } 
+    </script>
+</body>
+</html>
