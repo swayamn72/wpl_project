@@ -3,121 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Monthly Heatmap</title>
+  <title>Circular Scrolling Slideshow</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
+    /* Container styling */
+    .slideshow-container {
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Slideshow wrapper */
+    .slideshow {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f7f7f7;
+      gap: 20px; /* Space between cards */
+      transition: transform 0.5s ease;
+      will-change: transform;
     }
 
-    h1 {
-      margin-bottom: 20px;
-    }
-
-    .heatmap {
-      display: grid;
-      grid-template-columns: repeat(7, 40px); /* 7 columns for 7 days of the week */
-      gap: 5px;
-    }
-
-    .day {
-      width: 40px;
-      height: 40px;
+    /* Individual card styling */
+    .card {
+      flex: 0 0 300px; /* Fixed card width */
+      height: 200px;   /* Fixed card height */
+      background: #f4f4f4;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       display: flex;
       justify-content: center;
       align-items: center;
-      font-size: 12px;
-      color: #000;
-      border-radius: 5px;
-      background-color: white; /* Default color */
-      border: 1px solid #ccc;
-      cursor: pointer;
-      user-select: none;
+      font-size: 1.2em;
     }
 
-    .day.green {
-      background-color: #4caf50; /* Green for task done */
-      color: #fff;
-    }
-
-    .day.red {
-      background-color: #f44336; /* Red for task not done */
-      color: #fff;
-    }
-
-    .day.white {
-      background-color: white; /* White for no status */
-      color: #000;
-    }
-
-    @media (max-width: 600px) {
-      .heatmap {
-        grid-template-columns: repeat(7, 30px);
+    /* Responsive styling for cards */
+    @media (max-width: 768px) {
+      .card {
+        flex: 0 0 calc(100% / 2 - 20px); /* 2 cards in a row */
       }
-      .day {
-        width: 30px;
-        height: 30px;
-        font-size: 10px;
+    }
+    @media (max-width: 480px) {
+      .card {
+        flex: 0 0 calc(100% - 20px); /* 1 card in a row */
       }
     }
   </style>
 </head>
 <body>
-  <h1 id="month-name"></h1>
-  <div id="heatmap" class="heatmap"></div>
+  <div class="slideshow-container">
+    <div class="slideshow" id="slideshow">
+      <div class="card">Card 1</div>
+      <div class="card">Card 2</div>
+      <div class="card">Card 3</div>
+      <div class="card">Card 4</div>
+      <div class="card">Card 5</div>
+    </div>
+  </div>
 
   <script>
-    // Get the current month and year
-    const now = new Date();
-    const month = now.getMonth(); // 0 = January, 1 = February, etc.
-    const year = now.getFullYear();
-    const daysInMonth = new Date(year, month + 1, 0).getDate(); // Get number of days in the current month
+    const slideshow = document.getElementById('slideshow');
+    const cards = Array.from(slideshow.children);
+    const cardWidth = 300; // Width of a single card (matches CSS)
+    const gap = 20; // Gap between cards (matches CSS)
+    const totalCardWidth = cardWidth + gap;
 
-    // Set the month name
-    const monthName = now.toLocaleString('default', { month: 'long' });
-    document.getElementById('month-name').textContent = `${monthName} ${year}`;
+    let currentIndex = 0; // Index of the visible card
+    let isAnimating = false; // Prevent overlapping animations
 
-    // Reference to the heatmap container
-    const heatmap = document.getElementById('heatmap');
+    // Clone the first few cards and append them to the end for circular scrolling
+    cards.forEach(card => {
+      const clone = card.cloneNode(true);
+      slideshow.appendChild(clone);
+    });
 
-    // Generate heatmap cells
-    for (let i = 1; i <= daysInMonth; i++) {
-      const dayDiv = document.createElement('div');
-      dayDiv.classList.add('day', 'white'); // Default color: white
-      dayDiv.textContent = i;
+    function scrollToNextCard() {
+      if (isAnimating) return;
+      isAnimating = true;
 
-      // Toggle color on click
-      dayDiv.addEventListener('click', () => {
-        if (dayDiv.classList.contains('white')) {
-          dayDiv.classList.remove('white');
-          dayDiv.classList.add('green'); // Set to green
-        } else if (dayDiv.classList.contains('green')) {
-          dayDiv.classList.remove('green');
-          dayDiv.classList.add('red'); // Set to red
-        } else if (dayDiv.classList.contains('red')) {
-          dayDiv.classList.remove('red');
-          dayDiv.classList.add('white'); // Reset to white
-        }
-      });
+      currentIndex++;
+      slideshow.style.transition = 'transform 0.5s ease';
+      slideshow.style.transform = `translateX(${-currentIndex * totalCardWidth}px)`;
 
-      // Append the day to the heatmap container
-      heatmap.appendChild(dayDiv);
+      // Check if we reached the last cloned card
+      if (currentIndex >= cards.length) {
+        setTimeout(() => {
+          slideshow.style.transition = 'none'; // Disable animation
+          slideshow.style.transform = 'translateX(0px)'; // Reset to the start
+          currentIndex = 0; // Reset index
+          isAnimating = false;
+        }, 500); // Match transition duration
+      } else {
+        setTimeout(() => {
+          isAnimating = false;
+        }, 500); // Match transition duration
+      }
     }
 
-    // Add empty cells for alignment (if the month doesn't start on Sunday)
-    const firstDayOffset = new Date(year, month, 1).getDay(); // Day of the week (0 = Sunday)
-    for (let i = 0; i < firstDayOffset; i++) {
-      const emptyDiv = document.createElement('div');
-      emptyDiv.classList.add('day');
-      emptyDiv.style.visibility = 'hidden'; // Hide empty cells
-      heatmap.prepend(emptyDiv); // Add empty cells at the start
-    }
+    // Automatically scroll to the next card at regular intervals
+    setInterval(scrollToNextCard, 2000); // Scroll every 2 seconds
   </script>
 </body>
 </html>

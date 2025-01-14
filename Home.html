@@ -48,14 +48,18 @@
 </div>
 
 <div class="content">
-    <h1>Main Content</h1>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse faucibus, est id scelerisque mollis, odio urna feugiat eros, at vehicula ex magna eu enim.</p>
-    <div class="card" style="padding: 20px; border: 1px solid #ddd; margin-bottom: 20px;">
-        This is a card.
-    </div>
-    <div class="card" style="padding: 20px; border: 1px solid #ddd; margin-bottom: 20px;">
-        Another card with content.
-    </div>
+    <h4>Main Content</h4>
+
+<div class="slideshow-container">
+<div class="slideshow" id="slideshow">
+<div class="card">Card 1</div>
+<div class="card">Card 2</div>
+<div class="card">Card 3</div>
+<div class="card">Card 4</div>
+<div class="card">Card 5</div>
+
+</div>
+</div>
 </div>
 
 
@@ -129,6 +133,52 @@
       emptyDiv.style.visibility = 'hidden'; 
       heatmap.prepend(emptyDiv); 
     } 
+    </script>
+    <script>
+        const slideshow = document.getElementById('slideshow');
+        const cards = Array.from(slideshow.children);
+        const cardWidth = 300;
+        const gap = 20;
+        const totalCardWidth = cardWidth + gap;
+
+        let currentIndex = 0;
+        let isAnimating = false;
+
+        cards.forEach(card => {
+            const clone = card.cloneNode(true);
+            slideshow.appendChild(clone);
+        });
+
+    function scrollToNextCard(){
+
+    if(isAnimating) return;
+    isAnimating = true;
+
+    currentIndex++;
+    slideshow.style.transform = 'transform 0.5s ease';
+    slideshow.style.transform = `translateX(${-currentIndex * totalCardWidth}px)`;
+
+    if(currentIndex >= cards.length){
+        setTimeout(() => {
+            slideshow.style.transition = 'none';
+            slideshow.style.transform = 'translate(0px)';
+            currentIndex = 0;
+            isAnimating = false;
+
+        }, 500);
+
+    } else{
+        setTimeout(() => {
+            isAnimating = false;
+        },500)
+    }
+
+
+    }
+
+
+    setInterval(scrollToNextCard, 2000);
+
     </script>
 </body>
 </html>
