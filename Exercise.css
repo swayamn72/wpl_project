@@ -1,0 +1,25 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+#search-form {
+    margin-bottom: 20px;
+}
+#results {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.exercise {
+    margin-bottom: 20px;
+}
+.exercise img {
+    max-width: 300px;
+    max-height: 200px;
+    display: block;
+    margin-top: 10px;
+}
