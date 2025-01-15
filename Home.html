@@ -52,8 +52,8 @@
 
 <div class="slideshow-container">
 <div class="slideshow" id="slideshow">
-<div class="card">Card 1</div>
-<div class="card">Card 2</div>
+<div class="card"><a href="Exercise.html">My Workouts</a></div>
+<div class="card"><a href="Meal.html">My Meals</a></div>
 <div class="card">Card 3</div>
 <div class="card">Card 4</div>
 <div class="card">Card 5</div>
@@ -163,7 +163,10 @@
             slideshow.style.transition = 'none';
             slideshow.style.transform = 'translate(0px)';
             currentIndex = 0;
-            isAnimating = false;
+            setTimeout(() => {
+                slideshow.style.transition = 'transform 0.5s ease'; // Restore transition
+                isAnimating = false;
+            }, 20);
 
         }, 500);
 
