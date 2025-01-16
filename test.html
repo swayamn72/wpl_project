@@ -3,107 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercise Search</title>
+    <link rel="stylesheet" href="Meal.css">
+    <title>Meal Nutrition Info</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        /* Add some styles for cards */
+        .mealcard {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px;
+            background-color: #f9f9f9;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: inline-block;
+            width: 300px;
+            text-align: center;
+            position: relative;
         }
-        .suggestions {
-            border: 1px solid #ccc;
-            max-height: 200px;
-            overflow-y: auto;
+
+        .mealcard h4 {
+            margin: 0 0 8px;
+        }
+
+        .delete-btn {
             position: absolute;
-            background-color: white;
-            width: 100%;
-            z-index: 1000;
-        }
-        .suggestion-item {
-            padding: 10px;
+            top: 8px;
+            right: 8px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-        }
-        .suggestion-item:hover {
-            background-color: #f0f0f0;
+            padding: 4px 8px;
         }
     </style>
 </head>
 <body>
-    <h1>Exercise Search</h1>
-    <form id="search-form">
-        <label for="exercise-name">Enter Exercise Name:</label>
-        <input type="text" id="exercise-name" placeholder="e.g., pushup" autocomplete="off" />
-        <div id="suggestions" class="suggestions"></div>
-    </form>
-    <div id="results"></div>
+    <div class="mealfull">
+        <div id="searchbar">
+            <form id="searchForm">
+                <input type="text" id="searchInput" placeholder="Enter Your Meal Details">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div id="info"></div>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const exerciseNameInput = document.getElementById('exercise-name');
-        const suggestionsDiv = document.getElementById('suggestions');
-        const resultsDiv = document.getElementById('results');
+        document.getElementById("searchForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+            var query = document.getElementById("searchInput").value;
 
-        // Function to fetch exercises dynamically
-        const fetchExercisesByName = async (query) => {
-            const url = `https://exercisedb.p.rapidapi.com/exercises/name/${query}`;
-            const options = {
+            $.ajax({
                 method: 'GET',
-                headers: {
-                    'x-rapidapi-key': 'b6479b8b93msh9df003e22122475p102038jsn3cd80f415c32',
-                    'x-rapidapi-host': 'exercisedb.p.rapidapi.com',
+                url: 'https://api.calorieninjas.com/v1/nutrition?query=' + query,
+                headers: { 'X-Api-Key': '1MjVyE4++leUa2iRMXPiOQ==aZSLs6REOYYpkFTj' },
+                contentType: 'application/json',
+                success: function (result) {
+                    console.log(result);
+
+                    var infoDiv = document.getElementById("info");
+
+                    if (result.items && result.items.length > 0) {
+                        result.items.forEach(function (item) {
+                            // Create card container
+                            var card = document.createElement("div");
+                            card.classList.add("mealcard");
+
+                            // Add card content
+                            card.innerHTML = `
+                                <h4>${query}</h4>
+                                <p>Food: ${item.name}</p>
+                                <p>Protein: ${item.protein_g}g</p>
+                                <p>Calories: ${item.calories}</p>
+                                <button class="delete-btn">Delete</button>
+                            `;
+
+                            // Add delete functionality
+                            card.querySelector(".delete-btn").addEventListener("click", function () {
+                                infoDiv.removeChild(card);
+                            });
+
+                            // Append card to the info div
+                            infoDiv.appendChild(card);
+                        });
+                    } else {
+                        var noDataMessage = document.createElement("p");
+                        noDataMessage.textContent = "No nutritional information found for the given query.";
+                        infoDiv.appendChild(noDataMessage);
+                    }
                 },
-            };
-
-            try {
-                const response = await fetch(url, options);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch exercises');
+                error: function ajaxError(jqXHR) {
+                    console.error('Error: ', jqXHR.responseText);
+                    document.getElementById("info").innerHTML = '<p>Failed to fetch nutritional information. Please try again later.</p>';
                 }
-                return await response.json();
-            } catch (error) {
-                console.error(error);
-                return [];
-            }
-        };
-
-        // Function to render dropdown suggestions
-        const renderSuggestions = (exercises) => {
-            suggestionsDiv.innerHTML = '';
-            if (exercises.length === 0) {
-                suggestionsDiv.innerHTML = '<div class="suggestion-item">No results found</div>';
-                return;
-            }
-
-            exercises.forEach((exercise) => {
-                const suggestionItem = document.createElement('div');
-                suggestionItem.classList.add('suggestion-item');
-                suggestionItem.textContent = exercise.name;
-                suggestionItem.addEventListener('click', () => {
-                    displayExerciseDetails(exercise);
-                    exerciseNameInput.value = exercise.name;
-                    suggestionsDiv.innerHTML = ''; // Clear suggestions after selection
-                });
-                suggestionsDiv.appendChild(suggestionItem);
             });
-        };
-
-        // Function to display exercise details
-        const displayExerciseDetails = (exercise) => {
-            resultsDiv.innerHTML = `
-                <h2>Exercise Details:</h2>
-                <p><strong>Name:</strong> ${exercise.name}</p>
-                <p><strong>Body Part:</strong> ${exercise.bodyPart}</p>
-                <p><strong>Equipment:</strong> ${exercise.equipment}</p>
-                <img src="${exercise.gifUrl}" alt="${exercise.name}" style="max-width: 100%; height: auto;" />
-            `;
-        };
-
-        // Event listener for input
-        exerciseNameInput.addEventListener('input', async () => {
-            const query = exerciseNameInput.value.trim();
-            if (query.length > 0) {
-                const exercises = await fetchExercisesByName(query);
-                renderSuggestions(exercises);
-            } else {
-                suggestionsDiv.innerHTML = '';
-            }
         });
     </script>
 </body>

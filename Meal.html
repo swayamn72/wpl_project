@@ -5,57 +5,69 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Meal.css">
     <title>Meal Nutrition Info</title>
+    
 </head>
 <body>
-
-
-
-
     <div class="mealfull">
-
         <div id="searchbar">
             <form id="searchForm">
-            <input type="text" id="searchInput" placeholder="Enter Your Meal Details">
-            <button type="submit">Search</button>
-        </form>
+                <input type="text" id="searchInput" placeholder="Enter Your Meal Details">
+                <button type="submit">Search</button>
+            </form>
         </div>
-
         <div id="info"></div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        document.getElementById("searchForm").addEventListener("submit",function(e){
-           e.preventDefault();
+        document.getElementById("searchForm").addEventListener("submit", function (e) {
+            e.preventDefault();
             var query = document.getElementById("searchInput").value;
-      
 
-        $.ajax({
-            method: 'GET',
-            url: 'https://api.calorieninjas.com/v1/nutrition?query=' + query,
-            headers: { 'X-Api-Key': '1MjVyE4++leUa2iRMXPiOQ==aZSLs6REOYYpkFTj'},
-            contentType: 'application/json',
-            success: function(result) {
-                console.log(result);
+            $.ajax({
+                method: 'GET',
+                url: 'https://api.calorieninjas.com/v1/nutrition?query=' + query,
+                headers: { 'X-Api-Key': '1MjVyE4++leUa2iRMXPiOQ==aZSLs6REOYYpkFTj' },
+                contentType: 'application/json',
+                success: function (result) {
+                    console.log(result);
 
-                var infoDiv = document.getElementById("info");
-                infoDiv.innerHTML = '';
+                    var infoDiv = document.getElementById("info");
 
-                if (result.items && result.items.length > 0) {
-                    result.items.forEach(function(item) {
-                        var p = document.createElement("p");
-                        p.textContent = `Food: ${item.name}, Protein: ${item.protein_g}g, Calories: ${item.calories}`;
-                        infoDiv.appendChild(p);
-                    });
-                } else {
-                    infoDiv.innerHTML = '<p>No nutritional information found for the given query.</p>';
+                    if (result.items && result.items.length > 0) {
+                        result.items.forEach(function (item) {
+                           
+                            var card = document.createElement("div");
+                            card.classList.add("mealcard");
+
+                          
+                            card.innerHTML = `
+                                <h4>${query}</h4>
+                                <p>Food: ${item.name}</p>
+                                <p>Protein: ${item.protein_g}g</p>
+                                <p>Calories: ${item.calories}</p>
+                                <button class="delete-btn">Delete</button>
+                            `;
+
+                   
+                            card.querySelector(".delete-btn").addEventListener("click", function () {
+                                infoDiv.removeChild(card);
+                            });
+
+                           
+                            infoDiv.appendChild(card);
+                        });
+                    } else {
+                        var noDataMessage = document.createElement("p");
+                        noDataMessage.textContent = "No nutritional information found for the given query.";
+                       
+                    }
+                },
+                error: function ajaxError(jqXHR) {
+                    console.error('Error: ', jqXHR.responseText);
+                    document.getElementById("info").innerHTML = '<p>Failed to fetch nutritional information. Please try again later.</p>';
                 }
-            },
-            error: function ajaxError(jqXHR) {
-                console.error('Error: ', jqXHR.responseText);
-                document.getElementById("info").innerHTML = '<p>Failed to fetch nutritional information. Please try again later.</p>';
-            }
-        })
+            });
         });
     </script>
 </body>
