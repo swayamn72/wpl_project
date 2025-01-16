@@ -40,7 +40,7 @@
         const suggestionsDiv = document.getElementById('suggestions');
         const resultsDiv = document.getElementById('results');
 
-        // Function to fetch exercises dynamically
+       
         const fetchExercises = async (query) => {
             const url = `https://exercisedb.p.rapidapi.com/exercises/name/${query}`;
             const options = {
@@ -64,7 +64,7 @@
             }
         };
 
-        // Function to render dropdown suggestions
+      
         const renderSuggestions = (exercises) => {
             suggestionsDiv.innerHTML = '';
 
@@ -80,24 +80,28 @@
                 suggestionItem.addEventListener('click', () => {
                     displayExerciseDetails(exercise);
                     exerciseNameInput.value = exercise.name;
-                    suggestionsDiv.innerHTML = ''; // Clear suggestions after selection
+                    suggestionsDiv.innerHTML = ''; 
                 });
                 suggestionsDiv.appendChild(suggestionItem);
             });
         };
 
-        // Function to display exercise details
         const displayExerciseDetails = (exercise) => {
-            resultsDiv.innerHTML = `
-                <h2>Exercise Details:</h2>
-                <p><strong>Name:</strong> ${exercise.name}</p>
-                <p><strong>Body Part:</strong> ${exercise.bodyPart}</p>
-                <p><strong>Equipment:</strong> ${exercise.equipment}</p>
-                <img src="${exercise.gifUrl}" alt="${exercise.name}" style="max-width: 100%; height: auto;" />
-            `;
-        };
+    resultsDiv.innerHTML = `
+        <h2>Exercise Details:</h2>
+        <p><strong>Name:</strong> ${exercise.name}</p>
+        <img src="${exercise.gifUrl}" alt="${exercise.name}" style="max-width: 100%; height: auto;" />
+        <button class="delete-btn">Delete</button>
+    `;
 
-        // Event listener for input
+    // Add an event listener to the delete button
+    const deleteButton = resultsDiv.querySelector(".delete-btn");
+    deleteButton.addEventListener("click", function () {
+        resultsDiv.innerHTML = ''; // Clear the details from the results div
+    });
+};
+
+      
         exerciseNameInput.addEventListener('input', async () => {
             const query = exerciseNameInput.value.trim();
             if (query.length > 0) {
@@ -105,7 +109,7 @@
                 renderSuggestions(exercises);
             } else {
                 suggestionsDiv.innerHTML = '';
-                resultsDiv.innerHTML = ''; // Clear results if input is cleared
+                resultsDiv.innerHTML = ''; 
             }
         });
     </script>
