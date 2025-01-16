@@ -7,28 +7,22 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #f9f9f9;
         }
-        #search-form {
-            margin-bottom: 20px;
-        }
-        #results {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .exercise {
-            margin-bottom: 20px;
-        }
-        .exercise img {
-            max-width: 300px;
+        .suggestions {
+            border: 1px solid #ccc;
             max-height: 200px;
-            display: block;
-            margin-top: 10px;
+            overflow-y: auto;
+            position: absolute;
+            background-color: white;
+            width: 100%;
+            z-index: 1000;
+        }
+        .suggestion-item {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
         }
     </style>
 </head>
@@ -36,21 +30,19 @@
     <h1>Exercise Search</h1>
     <form id="search-form">
         <label for="exercise-name">Enter Exercise Name:</label>
-        <input type="text" id="exercise-name" placeholder="e.g., pushup" required />
-        <button type="submit">Search</button>
+        <input type="text" id="exercise-name" placeholder="e.g., pushup" autocomplete="off" />
+        <div id="suggestions" class="suggestions"></div>
     </form>
     <div id="results"></div>
 
     <script>
-        const form = document.getElementById('search-form');
+        const exerciseNameInput = document.getElementById('exercise-name');
+        const suggestionsDiv = document.getElementById('suggestions');
         const resultsDiv = document.getElementById('results');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const exerciseName = document.getElementById('exercise-name').value;
-            resultsDiv.innerHTML = 'Loading...';
-
-            const url = `https://exercisedb.p.rapidapi.com/exercises/name/${exerciseName}`;
+        // Function to fetch exercises dynamically
+        const fetchExercisesByName = async (query) => {
+            const url = `https://exercisedb.p.rapidapi.com/exercises/name/${query}`;
             const options = {
                 method: 'GET',
                 headers: {
@@ -62,30 +54,55 @@
             try {
                 const response = await fetch(url, options);
                 if (!response.ok) {
-                    throw new Error('Error fetching data');
+                    throw new Error('Failed to fetch exercises');
                 }
-                const data = await response.json();
-
-                if (data.length === 0) {
-                    resultsDiv.innerHTML = 'No results found.';
-                } else {
-                    resultsDiv.innerHTML = `<h2>Results:</h2>`;
-                    data.forEach((exercise) => {
-                        const exerciseDiv = document.createElement('div');
-                        exerciseDiv.classList.add('exercise');
-                        exerciseDiv.innerHTML = `
-                            <strong>Name:</strong> ${exercise.name}<br>
-                            <strong>Body Part:</strong> ${exercise.bodyPart}<br>
-                            <strong>Equipment:</strong> ${exercise.equipment}<br>
-                            <strong>GIF:</strong><br>
-                            <img src="${exercise.gifUrl}" alt="${exercise.name} GIF"><br>
-                            <hr>
-                        `;
-                        resultsDiv.appendChild(exerciseDiv);
-                    });
-                }
+                return await response.json();
             } catch (error) {
-                resultsDiv.innerHTML = `Error: ${error.message}`;
+                console.error(error);
+                return [];
+            }
+        };
+
+        // Function to render dropdown suggestions
+        const renderSuggestions = (exercises) => {
+            suggestionsDiv.innerHTML = '';
+            if (exercises.length === 0) {
+                suggestionsDiv.innerHTML = '<div class="suggestion-item">No results found</div>';
+                return;
+            }
+
+            exercises.forEach((exercise) => {
+                const suggestionItem = document.createElement('div');
+                suggestionItem.classList.add('suggestion-item');
+                suggestionItem.textContent = exercise.name;
+                suggestionItem.addEventListener('click', () => {
+                    displayExerciseDetails(exercise);
+                    exerciseNameInput.value = exercise.name;
+                    suggestionsDiv.innerHTML = ''; // Clear suggestions after selection
+                });
+                suggestionsDiv.appendChild(suggestionItem);
+            });
+        };
+
+        // Function to display exercise details
+        const displayExerciseDetails = (exercise) => {
+            resultsDiv.innerHTML = `
+                <h2>Exercise Details:</h2>
+                <p><strong>Name:</strong> ${exercise.name}</p>
+                <p><strong>Body Part:</strong> ${exercise.bodyPart}</p>
+                <p><strong>Equipment:</strong> ${exercise.equipment}</p>
+                <img src="${exercise.gifUrl}" alt="${exercise.name}" style="max-width: 100%; height: auto;" />
+            `;
+        };
+
+        // Event listener for input
+        exerciseNameInput.addEventListener('input', async () => {
+            const query = exerciseNameInput.value.trim();
+            if (query.length > 0) {
+                const exercises = await fetchExercisesByName(query);
+                renderSuggestions(exercises);
+            } else {
+                suggestionsDiv.innerHTML = '';
             }
         });
     </script>

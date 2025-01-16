@@ -4,6 +4,13 @@ body {
     padding: 20px;
     background-color: #f9f9f9;
 }
+
+/* .topcard{
+ 
+    height: 300px;
+
+} */
+
 #search-form {
     margin-bottom: 20px;
 }
@@ -23,3 +30,4 @@ body {
     display: block;
     margin-top: 10px;
 }
+
