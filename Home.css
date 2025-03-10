@@ -8,8 +8,41 @@ body, html {
     margin-left: 25px;
 }
 
+.user-profile h6{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.user-profile p{
+  font-size: 16px;
+}
+
 .user-profile {
-    padding: 30px;
+    padding-top: 30px;
+    padding-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.menuList{
+  list-style: none;
+  padding-bottom: 20px;
+}
+
+.menuList li{
+  font-size: 18px;
+    padding: 10px 0;
+}
+
+.menuList li:hover{
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.left-bar img{
+  width: 90px;
 }
 
 .left-bar {
@@ -22,6 +55,8 @@ body, html {
 
 .left-bar ul li {
     margin: 10px 0;
+    font-size: 18px;
+    font-weight: bold;
 }
 
 
