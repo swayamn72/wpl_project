@@ -1,140 +1,167 @@
 body, html {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  background-color: #e3f2fd; /* Light sky-blue background */
+  font-family: Arial, sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background-color: #64b5f6 !important; /* Sky blue navbar */
+  color: white;
 }
 
 .navbar-brand {
-    margin-left: 25px;
-}
-
-.user-profile h6{
-  font-size: 20px;
+  font-size: 24px;
   font-weight: bold;
+  color: rgb(0, 0, 0) !important;
 }
 
-.user-profile p{
-  font-size: 16px;
+.navbar .btn-danger {
+  background-color: #d32f2f; /* Dark red for logout button */
+  border: none;
+}
+
+.navbar .btn-danger:hover {
+  background-color: #b71c1c;
+}
+
+/* Sidebar */
+.left-bar {
+  width: 250px;
+  background-color: #bbdefb; /* Lighter blue */
+  padding: 20px;
+  height: 100vh;
+  position: fixed;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .user-profile {
-    padding-top: 30px;
-    padding-bottom: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  text-align: center;
+  padding-bottom: 20px;
 }
 
-.menuList{
+.user-profile h6 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1565c0; /* Darker blue */
+}
+
+.user-profile p {
+  font-size: 16px;
+  color: #0d47a1;
+}
+
+.user-profile img {
+  width: 90px;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+/* Menu List */
+.menuList {
   list-style: none;
   padding-bottom: 20px;
 }
 
-.menuList li{
+.menuList li {
   font-size: 18px;
-    padding: 10px 0;
-}
-
-.menuList li:hover{
-  text-decoration: underline;
+  padding: 10px 0;
+  color: #1e88e5;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-.left-bar img{
-  width: 90px;
+.menuList li:hover {
+  text-decoration: underline;
+  color: #0d47a1;
 }
 
-.left-bar {
-    width: 250px;
-    background-color: wheat;
-    padding: 20px;
-    height: 100vh;
-    position: fixed;
-}
-
-.left-bar ul li {
-    margin: 10px 0;
-    font-size: 18px;
-    font-weight: bold;
-}
-
-
+/* Heatmap */
 .heatmap {
-    display: grid;
-    grid-template-columns: repeat(7, 20px);
-    gap: 5px;
-    margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(7, 20px);
+  gap: 5px;
+  margin-top: 20px;
 }
 
 .day {
-    width: 20px;
-    height: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12px;
-    color: white;
-    border-radius: 2px;
-    background-color: white;
-    user-select: none;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  color: white;
+  border-radius: 2px;
+  user-select: none;
 }
 
 .day.green {
-    background-color: green;
+  background-color: green;
 }
 
 .day.red {
-    background-color: red;
+  background-color: red;
 }
 
 .day.white {
-    background-color: white;
+  background-color: white;
 }
 
-
-
+/* Main Content */
 .content {
-    margin-left: 270px; 
-    margin-top: 15px; 
-    padding: 0px;
-    height: calc(100vh - 56px); 
-    overflow-y: auto;
+  margin-left: 270px;
+  margin-top: 15px;
+  padding: 0px;
+  height: calc(100vh - 56px);
+  overflow-y: auto;
 }
 
+/* Slideshow */
 .slideshow-container {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-  }
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
 
-  /* Slideshow wrapper */
-  .slideshow {
-    display: flex;
-    gap: 20px; /* Space between cards */
-    transition: transform 0.5s ease;
-    will-change: transform;
-  }
+.slideshow {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.5s ease;
+  will-change: transform;
+}
 
+.card {
+  flex: 0 0 300px;
+  height: 200px !important;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #0d47a1;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  background-color: #90caf9;
+}
+
+@media (max-width: 768px) {
   .card {
-    flex: 0 0 300px;
-    height: 200px !important;   
-    background: #f4f4f4;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2em;
+      flex: 0 0 calc(100% / 2 - 20px);
   }
+}
 
-  @media (max-width: 768px) {
-    .card {
-      flex: 0 0 calc(100% / 2 - 20px); /* 2 cards in a row */
-    }
+@media (max-width: 480px) {
+  .card {
+      flex: 0 0 calc(100% - 20px);
   }
-  @media (max-width: 480px) {
-    .card {
-      flex: 0 0 calc(100% - 20px); /* 1 card in a row */
-    }
-  }
+}

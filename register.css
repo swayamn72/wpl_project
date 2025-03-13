@@ -1,3 +1,4 @@
+/* Maintain the original warm theme */
 body, html {
     margin: 0;
     padding: 0;
@@ -9,8 +10,9 @@ body, html {
     font-family: Arial, sans-serif;
 }
 
-.login-container {
-    width: 400px;
+/* Registration Container */
+.register-container {
+    width: 450px;
     padding: 30px;
     background: #fce9db;
     border-radius: 15px;
@@ -18,11 +20,13 @@ body, html {
     text-align: center;
 }
 
+/* Heading */
 h2 {
     margin-bottom: 20px;
     color: #333;
 }
 
+/* Labels */
 label {
     display: block;
     font-weight: bold;
@@ -31,7 +35,8 @@ label {
     color: #555;
 }
 
-input {
+/* Input Fields */
+input, select {
     width: 100%;
     padding: 12px;
     margin-top: 5px;
@@ -41,6 +46,16 @@ input {
     font-size: 14px;
 }
 
+/* Gender Dropdown */
+select {
+    appearance: none;
+    cursor: pointer;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+/* Button Styling */
 button {
     width: 100%;
     padding: 14px;
@@ -59,6 +74,7 @@ button:hover {
     background: #d8573c;
 }
 
+/* Login Redirect */
 p {
     margin-top: 15px;
     font-size: 14px;

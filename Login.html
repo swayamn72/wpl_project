@@ -1,31 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Login.css">
-   
-    <title>Document</title>
+    <link rel="stylesheet" href="login.css">
+    <title>Login - FitTrack</title>
+    <style>
+
+    </style>
 </head>
+
 <body>
-<div class="full">
- <div class="heading">
-    <h1>Fit Track</h1>
- </div>   
- <div class="content">
-    <p>
-        Welcome to FitTrack, your ultimate destination for achieving a healthier,
-         fitter lifestyle. Whether you’re just starting your fitness journey or are a seasoned athlete, 
-         we offer personalized workout plans, expert nutrition advice, and a vibrant community to support your goals. With a variety of workout routines, from strength training to yoga and cardio, 
-         you'll find something that suits your style and fitness level. Track your progress, stay motivated with challenges, and get access to a range of resources that will help you push your limits and stay on track. 
-         Let's work together to build a stronger, healthier you!
-        </p>
- </div>
-<!-- 
- <div class="loginb">
-    <button type="button" class="btn btn-danger">Login</button>
- </div>
-     -->
-</div>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form action="login.php" method="POST">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+        <p>Don't have an account? <a href="register.html">Sign up here</a></p>
+    </div>
 </body>
+
 </html>
