@@ -2,15 +2,13 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100vh;
-  background-color: #e3f2fd; /* Light sky-blue background */
+  background-color: #F0F0F0 !important; /* Light sky-blue background */
   font-family: Arial, sans-serif;
+  overflow: hidden;
 }
 
 /* Navbar */
-.navbar {
-  background-color: #64b5f6 !important; /* Sky blue navbar */
-  color: white;
-}
+
 
 .navbar-brand {
   font-size: 24px;
@@ -29,35 +27,96 @@ body, html {
 
 /* Sidebar */
 .left-bar {
-  width: 250px;
-  background-color: #bbdefb; /* Lighter blue */
-  padding: 20px;
+  width: 300px;
+ 
+  padding: 15px;
   height: 100vh;
   position: fixed;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+
 }
 
 .user-profile {
+
+  background: white !important; 
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+  margin-left: 5px;
   text-align: center;
-  padding-bottom: 20px;
+  width: 220px;
+  height: 250px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.user-profile h6 {
-  font-size: 20px;
-  font-weight: bold;
-  color: #1565c0; /* Darker blue */
+/* Hover effect for a smooth animation */
+.user-profile:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-.user-profile p {
-  font-size: 16px;
-  color: #0d47a1;
-}
-
-.user-profile img {
+.mainProfileImg {
   width: 90px;
+  height: 90px;
   border-radius: 50%;
-  border: 3px solid white;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 3px solid #ccc;
+  transition: border 0.3s ease-in-out;
 }
+
+/* Hover effect on the profile image */
+.user-profile:hover .mainProfileImg {
+  border: 3px solid purple;
+}
+
+.username {
+  font-size: 25px;
+  font-weight: bold;
+  margin: 5px 0;
+  color: black;
+}
+
+.user-details {
+  font-size: 10px;
+  color: gray;
+  margin-bottom: 15px;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+  padding: 10px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.stats div {
+  text-align: center;
+}
+
+.label {
+  font-size: 14px;
+  color: purple;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.value {
+  font-size: 18px;
+  font-weight: bold;
+  color: black;
+}
+
+/* .quote {
+  font-weight: bold;
+  margin-top: 10px;
+  color: black;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+} */
+
 
 /* Menu List */
 .menuList {
@@ -65,50 +124,13 @@ body, html {
   padding-bottom: 20px;
 }
 
-.menuList li {
-  font-size: 18px;
-  padding: 10px 0;
-  color: #1e88e5;
-  cursor: pointer;
-  transition: 0.3s;
-}
+
 
 .menuList li:hover {
   text-decoration: underline;
-  color: #0d47a1;
+
 }
 
-/* Heatmap */
-.heatmap {
-  display: grid;
-  grid-template-columns: repeat(7, 20px);
-  gap: 5px;
-  margin-top: 20px;
-}
-
-.day {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-  color: white;
-  border-radius: 2px;
-  user-select: none;
-}
-
-.day.green {
-  background-color: green;
-}
-
-.day.red {
-  background-color: red;
-}
-
-.day.white {
-  background-color: white;
-}
 
 /* Main Content */
 .content {
@@ -133,10 +155,10 @@ body, html {
   will-change: transform;
 }
 
-.card {
+.card1 {
   flex: 0 0 300px;
   height: 200px !important;
-  background: #ffffff;
+  background: linear-gradient(to right, #3b82f6, #93c5fd);
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -144,14 +166,46 @@ body, html {
   align-items: center;
   font-size: 1.2em;
   font-weight: bold;
-  color: #0d47a1;
+
+  text-align: center;
+  transition: 0.3s;
+}
+
+.card2 {
+  flex: 0 0 300px;
+  height: 200px !important;
+  background: linear-gradient(to right, red, pink);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+
+  text-align: center;
+  transition: 0.3s;
+}
+
+.card3 {
+  flex: 0 0 300px;
+  height: 200px !important;
+  background: linear-gradient(to right, green, lightgreen);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+
   text-align: center;
   transition: 0.3s;
 }
 
 .card:hover {
   transform: scale(1.05);
-  background-color: #90caf9;
+
 }
 
 @media (max-width: 768px) {
@@ -164,4 +218,50 @@ body, html {
   .card {
       flex: 0 0 calc(100% - 20px);
   }
+}
+
+
+.calendar-container {
+  margin-top: 5px;
+  width: 230px;
+  height: 250px;
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 8px;
+  box-shadow: 1px 1px 1px 1px rgba(0, 0, 0, 0.2);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.calendar-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 30px);
+  gap: 2px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.calendar-day {
+  padding: 2px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.calendar-day.today {
+  background-color: #6A0DAD;
+  color: white;
+  font-weight: bold;
+}
+
+.calendar-day:hover {
+  background-color: #ddd;
+  cursor: pointer;
 }

@@ -1,104 +1,144 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="Meal.css">
-    <title>Meal Nutrition Info</title>
-    <style>
-        /* Add some styles for cards */
-        .mealcard {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 16px;
-            margin: 16px;
-            background-color: #f9f9f9;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            display: inline-block;
-            width: 300px;
-            text-align: center;
-            position: relative;
-        }
-
-        .mealcard h4 {
-            margin: 0 0 8px;
-        }
-
-        .delete-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            padding: 4px 8px;
-        }
-    </style>
-</head>
-<body>
-    <div class="mealfull">
-        <div id="searchbar">
-            <form id="searchForm">
-                <input type="text" id="searchInput" placeholder="Enter Your Meal Details">
-                <button type="submit">Search</button>
-            </form>
-        </div>
-        <div id="info"></div>
+<div class="calendar-container">
+    <div class="calendar-header">
+      <button id="prevMonth">&lt;</button>
+      <h3 id="currentMonth"></h3>
+      <button id="nextMonth">&gt;</button>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        document.getElementById("searchForm").addEventListener("submit", function (e) {
-            e.preventDefault();
-            var query = document.getElementById("searchInput").value;
-
-            $.ajax({
-                method: 'GET',
-                url: 'https://api.calorieninjas.com/v1/nutrition?query=' + query,
-                headers: { 'X-Api-Key': '1MjVyE4++leUa2iRMXPiOQ==aZSLs6REOYYpkFTj' },
-                contentType: 'application/json',
-                success: function (result) {
-                    console.log(result);
-
-                    var infoDiv = document.getElementById("info");
-
-                    if (result.items && result.items.length > 0) {
-                        result.items.forEach(function (item) {
-                            // Create card container
-                            var card = document.createElement("div");
-                            card.classList.add("mealcard");
-
-                            // Add card content
-                            card.innerHTML = `
-                                <h4>${query}</h4>
-                                <p>Food: ${item.name}</p>
-                                <p>Protein: ${item.protein_g}g</p>
-                                <p>Calories: ${item.calories}</p>
-                                <button class="delete-btn">Delete</button>
-                            `;
-
-                            // Add delete functionality
-                            card.querySelector(".delete-btn").addEventListener("click", function () {
-                                infoDiv.removeChild(card);
-                            });
-
-                            // Append card to the info div
-                            infoDiv.appendChild(card);
-                        });
-                    } else {
-                        var noDataMessage = document.createElement("p");
-                        noDataMessage.textContent = "No nutritional information found for the given query.";
-                        infoDiv.appendChild(noDataMessage);
-                    }
-                },
-                error: function ajaxError(jqXHR) {
-                    console.error('Error: ', jqXHR.responseText);
-                    document.getElementById("info").innerHTML = '<p>Failed to fetch nutritional information. Please try again later.</p>';
-                }
-            });
-        });
-    </script>
-</body>
-</html>
+    <div class="calendar-days">
+      <div class="day-name">Mo</div>
+      <div class="day-name">Tu</div>
+      <div class="day-name">We</div>
+      <div class="day-name">Th</div>
+      <div class="day-name">Fr</div>
+      <div class="day-name">Sa</div>
+      <div class="day-name">Su</div>
+    </div>
+    <div id="calendar" class="calendar"></div>
+    <p class="calendar-footer">My Activity</p>
+  </div>
+  
+  <style>
+    .calendar-container {
+      width: 220px;
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      font-family: Arial, sans-serif;
+    }
+  
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: bold;
+    }
+  
+    .calendar-header button {
+      background: none;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  
+    .calendar-days, .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-top: 10px;
+    }
+  
+    .day-name {
+      font-size: 12px;
+      font-weight: bold;
+      color: #555;
+    }
+  
+    .calendar-day {
+      font-size: 14px;
+      padding: 6px;
+      border-radius: 50%;
+      text-align: center;
+      position: relative;
+    }
+  
+    .calendar-day.today {
+      background: #a855f7;
+      color: white;
+    }
+  
+    .calendar-day.active::after {
+      content: "•";
+      display: block;
+      font-size: 10px;
+      color: black;
+      margin-top: 2px;
+    }
+  
+    .calendar-footer {
+      font-size: 12px;
+      margin-top: 10px;
+      color: #555;
+    }
+  </style>
+  
+  <script>
+  function generateCalendar(monthOffset = 0) {
+    const calendar = document.getElementById('calendar');
+    const currentMonthText = document.getElementById('currentMonth');
+    const date = new Date();
+    
+    date.setMonth(date.getMonth() + monthOffset);
+    
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    
+    currentMonthText.textContent = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+  
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDay = new Date(year, month + 1, 0).getDate();
+  
+    calendar.innerHTML = '';
+  
+    // Add empty divs for spacing
+    for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+      const emptyDiv = document.createElement('div');
+      calendar.appendChild(emptyDiv);
+    }
+  
+    // Add days
+    for (let i = 1; i <= lastDay; i++) {
+      const dayDiv = document.createElement('div');
+      dayDiv.classList.add('calendar-day');
+      dayDiv.textContent = i;
+  
+      const today = new Date();
+      if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+        dayDiv.classList.add('today');
+      }
+  
+      // Add dots to some days as an example
+      if (Math.random() > 0.6) {
+        dayDiv.classList.add('active');
+      }
+  
+      calendar.appendChild(dayDiv);
+    }
+  }
+  
+  let monthOffset = 0;
+  document.getElementById('prevMonth').addEventListener('click', () => {
+    monthOffset--;
+    generateCalendar(monthOffset);
+  });
+  
+  document.getElementById('nextMonth').addEventListener('click', () => {
+    monthOffset++;
+    generateCalendar(monthOffset);
+  });
+  
+  window.onload = () => generateCalendar();
+  </script>
+  

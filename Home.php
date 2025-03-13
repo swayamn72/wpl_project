@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Redirect to login if not logged in
+    header("Location: login.html"); // Redirect to login if not logged in
     exit();
 }
 
@@ -11,7 +11,7 @@ $age = $_SESSION['age'];
 
 if (isset($_POST['logout'])) {
     session_destroy();
-    header("Location: register.php");
+    header("Location: register.html");
     exit();
 }
 ?>
@@ -22,7 +22,8 @@ if (isset($_POST['logout'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FitTrack - Home</title>
-    <link rel="stylesheet" href="Home.css">
+    <link rel="stylesheet" href="Home.css?v=2">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 </head>
@@ -42,31 +43,52 @@ if (isset($_POST['logout'])) {
 
     <!-- Sidebar -->
     <div class="left-bar">
-        <div class="user-profile">
-            <img class="mainProfileImg" src="svg/profile.svg" alt="Profile Image">
-            <h6><?php echo htmlspecialchars($username); ?></h6>
-            <p><?php echo htmlspecialchars($gender) . ", " . htmlspecialchars($age) . " years"; ?></p>
+    <div class="user-profile">
+    <img class="mainProfileImg" src="svg/profile.svg" alt="Profile Image">
+    <h2 class="username"><?php echo htmlspecialchars($username); ?></h2>
+    <p class="gender-age"><?php echo htmlspecialchars($gender) . ", " . htmlspecialchars($age) . " Years"; ?></p>
+    
+    <div class="stats">
+        <div class="stat">
+            <span class="label">Height</span>
+            <!-- <span class="value"><?php echo htmlspecialchars($height); ?> cm</span> -->
         </div>
-        <ul class="menuList">
-            <li><a href="home.php">Home</a></li>
-            <li><a href="workouts.php">Workouts</a></li>
-            <li><a href="diet.php">Diet</a></li>
-        </ul>
+        <div class="separator">|</div>
+        <div class="stat">
+            <span class="label">Weight</span>
+            <!-- <span class="value"><?php echo htmlspecialchars($weight); ?> kg</span> -->
+        </div>
+    </div>
 
-        <h5 id="month-name"></h5>
-        <div id="heatmap" class="heatmap"></div>
+    <!-- <p class="motto">STRONGER EVERY DAY!</p> -->
+</div>
+<div class="calendar-container">
+<h3 id="calendar-title" class="calendar-title">Calendar</h3>
+
+<script>
+function updateCalendarTitle() {
+  const titleElement = document.getElementById("calendar-title");
+  const date = new Date();
+  const monthYear = date.toLocaleString("default", { month: "long", year: "numeric" });
+  titleElement.textContent = monthYear;
+}
+
+// Call the function when the page loads
+updateCalendarTitle();
+</script>
+      <div id="calendar" class="calendar"></div>
+    </div>
     </div>
 
     <!-- Main Content -->
     <div class="content">
-        <h4>Main Content</h4>
+        <!-- <h4>Main Content</h4> -->
         <div class="slideshow-container">
             <div class="slideshow" id="slideshow">
-                <div class="card"><a href="Exercise.html">My Workouts</a></div>
-                <div class="card"><a href="Meal.html">My Meals</a></div>
-                <div class="card">Card 3</div>
-                <div class="card">Card 4</div>
-                <div class="card">Card 5</div>
+                <div class="card1"><a href="Exercise.html">My Workouts</a></div>
+                <div class="card2"><a href="Meal.html">My Meals</a></div>
+                <div class="card3">Card 3</div>
+
             </div>
         </div>
     </div>
@@ -111,6 +133,58 @@ if (isset($_POST['logout'])) {
             // setInterval(scrollToNextCard, 2000);
         });
     </script>
+    <script>
+function generateCalendar() {
+  const calendar = document.getElementById('calendar');
+  const date = new Date();
+  
+  const month = date.getMonth(); // Get current month (0-11)
+  const year = date.getFullYear(); // Get current year
+  
+  // Get the first day of the month
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0); // Last day of the current month
+  
+  const daysInMonth = lastDay.getDate(); // Number of days in the month
+  const startDay = firstDay.getDay(); // Day of the week the month starts on
+  
+  // Clear the existing calendar
+  calendar.innerHTML = '';
+  
+  // Add day names (Sun, Mon, Tue, etc.)
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  daysOfWeek.forEach(day => {
+    const dayElement = document.createElement('div');
+    dayElement.classList.add('calendar-day');
+    dayElement.textContent = day;
+    calendar.appendChild(dayElement);
+  });
+
+  // Add empty divs for the days before the first day of the month
+  for (let i = 0; i < startDay; i++) {
+    const emptyDiv = document.createElement('div');
+    calendar.appendChild(emptyDiv);
+  }
+
+  // Add the days of the month
+  for (let i = 1; i <= daysInMonth; i++) {
+    const dayDiv = document.createElement('div');
+    dayDiv.classList.add('calendar-day');
+    dayDiv.textContent = i;
+
+    // Check if it's today
+    const currentDate = new Date();
+    if (i === currentDate.getDate() && month === currentDate.getMonth() && year === currentDate.getFullYear()) {
+      dayDiv.classList.add('today');
+    }
+    
+    calendar.appendChild(dayDiv);
+  }
+}
+
+// Call the generateCalendar function when the page loads
+window.onload = generateCalendar;
+</script>
 
 </body>
 </html>
