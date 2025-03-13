@@ -4,27 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercise Search</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .suggestions {
-            border: 1px solid #ccc;
-            max-height: 200px;
-            overflow-y: auto;
-            position: absolute;
-            background-color: white;
-            width: 100%;
-            z-index: 1000;
-        }
-        .suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-        }
-        .suggestion-item:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
+   
 </head>
 <body>
     <h1>Exercise Search</h1>
@@ -33,14 +13,14 @@
         <input type="text" id="exercise-name" placeholder="e.g., pushup" autocomplete="off" />
         <div id="suggestions" class="suggestions"></div>
     </form>
-    <div id="results"></div>
+    <div id="results" class="exercise-container"></div>
 
     <script>
         const exerciseNameInput = document.getElementById('exercise-name');
         const suggestionsDiv = document.getElementById('suggestions');
         const resultsDiv = document.getElementById('results');
 
-       
+        // Fetch exercises from API
         const fetchExercises = async (query) => {
             const url = `https://exercisedb.p.rapidapi.com/exercises/name/${query}`;
             const options = {
@@ -64,7 +44,7 @@
             }
         };
 
-      
+        // Render suggestion dropdown
         const renderSuggestions = (exercises) => {
             suggestionsDiv.innerHTML = '';
 
@@ -79,29 +59,36 @@
                 suggestionItem.textContent = exercise.name;
                 suggestionItem.addEventListener('click', () => {
                     displayExerciseDetails(exercise);
-                    exerciseNameInput.value = exercise.name;
+                    exerciseNameInput.value = ''; // Clear input
                     suggestionsDiv.innerHTML = ''; 
                 });
                 suggestionsDiv.appendChild(suggestionItem);
             });
         };
 
+        // Display multiple exercise cards
         const displayExerciseDetails = (exercise) => {
-    resultsDiv.innerHTML = `
-        <h2>Exercise Details:</h2>
-        <p><strong>Name:</strong> ${exercise.name}</p>
-        <img src="${exercise.gifUrl}" alt="${exercise.name}" style="max-width: 100%; height: auto;" />
-        <button class="delete-btn">Delete</button>
-    `;
+            // Create exercise card
+            const card = document.createElement('div');
+            card.classList.add('exercise-card');
+            card.innerHTML = `
+                <h3>${exercise.name}</h3>
+                <img src="${exercise.gifUrl}" alt="${exercise.name}" />
+                <label for="sets-${exercise.id}">Sets:</label>
+                <input type="number" id="sets-${exercise.id}" min="1" max="10" value="3" style="width: 50px;">
+                <button class="delete-btn">Delete</button>
+            `;
 
-    // Add an event listener to the delete button
-    const deleteButton = resultsDiv.querySelector(".delete-btn");
-    deleteButton.addEventListener("click", function () {
-        resultsDiv.innerHTML = ''; // Clear the details from the results div
-    });
-};
+            // Add delete functionality
+            card.querySelector(".delete-btn").addEventListener("click", function () {
+                card.remove();
+            });
 
-      
+            // Append to results
+            resultsDiv.appendChild(card);
+        };
+
+        // Handle search input
         exerciseNameInput.addEventListener('input', async () => {
             const query = exerciseNameInput.value.trim();
             if (query.length > 0) {
@@ -109,7 +96,6 @@
                 renderSuggestions(exercises);
             } else {
                 suggestionsDiv.innerHTML = '';
-                resultsDiv.innerHTML = ''; 
             }
         });
     </script>
