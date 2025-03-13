@@ -1,34 +1,34 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: login.html"); // Redirect to login if not logged in
+    header("Location: login.php"); // Redirect to login if not logged in
     exit();
 }
+
 $username = $_SESSION['username'];
 $gender = $_SESSION['gender'];
 $age = $_SESSION['age'];
 
 if (isset($_POST['logout'])) {
     session_destroy();
-    header("Location: register.html"); // Redirect to register page on logout
+    header("Location: register.php");
     exit();
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitTrack - Home</title>
     <link rel="stylesheet" href="Home.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
-    <title>FitTrack</title>
 </head>
 
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-light bg-light px-3 d-flex justify-content-between align-items-center">
         <div class="navbar-brand">FitTrack</div>
         <div class="calendar-section">
@@ -40,22 +40,24 @@ if (isset($_POST['logout'])) {
         </form>
     </nav>
 
+    <!-- Sidebar -->
     <div class="left-bar">
         <div class="user-profile">
             <img class="mainProfileImg" src="svg/profile.svg" alt="Profile Image">
-            <h6><?php echo $username; ?></h6>
-            <p><?php echo $gender . ", " . $age . " years"; ?></p>
+            <h6><?php echo htmlspecialchars($username); ?></h6>
+            <p><?php echo htmlspecialchars($gender) . ", " . htmlspecialchars($age) . " years"; ?></p>
         </div>
         <ul class="menuList">
-            <li>Home</li>
-            <li>Workouts</li>
-            <li>Diet</li>
+            <li><a href="home.php">Home</a></li>
+            <li><a href="workouts.php">Workouts</a></li>
+            <li><a href="diet.php">Diet</a></li>
         </ul>
 
         <h5 id="month-name"></h5>
         <div id="heatmap" class="heatmap"></div>
     </div>
 
+    <!-- Main Content -->
     <div class="content">
         <h4>Main Content</h4>
         <div class="slideshow-container">
@@ -69,9 +71,16 @@ if (isset($_POST['logout'])) {
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 FitTrack. All rights reserved.</p>
+    </footer>
+
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // Date Selection
         function formatDate(date) {
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
             return date.toLocaleDateString('en-US', options);
@@ -86,7 +95,22 @@ if (isset($_POST['logout'])) {
                     document.getElementById("selected-date").textContent = dateStr;
                 }
             });
+
+            // Slideshow
+            // const slideshow = document.getElementById('slideshow');
+            // let currentIndex = 0;
+            // const cards = slideshow.children;
+            // const totalCards = cards.length;
+
+            // function scrollToNextCard() {
+            //     currentIndex = (currentIndex + 1) % totalCards;
+            //     slideshow.style.transition = "transform 0.5s ease-in-out";
+            //     slideshow.style.transform = `translateX(${-currentIndex * 100}%)`;
+            // }
+
+            // setInterval(scrollToNextCard, 2000);
         });
     </script>
+
 </body>
 </html>
