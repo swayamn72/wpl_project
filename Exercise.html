@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="https://cdn.tailwindcss.com"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercise Search</title>
@@ -29,12 +30,20 @@
     </style>
 </head>
 <body>
-    <h1>Exercise Search</h1>
-    <form id="search-form">
-        <input type="text" id="exercise-name" placeholder="Enter Exercise Name..." autocomplete="off" />
-        <div id="suggestions" class="suggestions"></div>
-    </form>
-    <div id="results" class="exercise-container"></div>
+
+    <div class="w-[90%] h-[100%] rounded-lg bg-gradient-to-r from-blue-200 to-blue-400 p-4 shadow-lg mt-4 ml-10">
+        <p class="text-white font-bold">Your Content Here</p>
+        <form id="search-form">
+            <input type="text" id="exercise-name" placeholder="Enter Exercise Name..." autocomplete="off" />
+            <div id="suggestions" class="suggestions"></div>
+
+        </form>
+        <div id="results" class="exercise-container"></div>
+    </div>
+
+    
+
+ 
 
     <script>
         const exerciseNameInput = document.getElementById('exercise-name');
