@@ -5,118 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercise Search</title>
     <style>
-        /* General Styling */
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(180deg, #6bc1ff 0%, #0072ff 100%);
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
+ .exercise-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Creates 3 equal-width columns */
+    gap: 20px; /* Adds space between items */
+}
 
-        h1 {
-            margin-top: 20px;
-        }
+.exercise-item {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
 
-        /* Search Form */
-        #search-form {
-            margin: 20px auto;
-            max-width: 400px;
-            position: relative;
-        }
+.exercise-item img {
+    width: 50%; /* Adjust image size */
+    height: auto;
+}
 
-        #exercise-name {
-            width: 100%;
-            padding: 12px;
-            border-radius: 20px;
-            border: none;
-            outline: none;
-            font-size: 16px;
-        }
-
-        /* Suggestions Dropdown */
-        .suggestions {
-            position: absolute;
-            width: 100%;
-            background: white;
-            color: black;
-            border-radius: 10px;
-            margin-top: 5px;
-            max-height: 150px;
-            overflow-y: auto;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-        }
-
-        .suggestion-item {
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        .suggestion-item:hover {
-            background: #ddd;
-        }
-
-        /* Exercise Cards */
-        .exercise-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            max-width: 90%;
-            margin: 20px auto;
-            padding: 10px;
-        }
-
-        .exercise-card {
-            background: white;
-            color: black;
-            padding: 15px;
-            border-radius: 15px;
-            text-align: center;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s ease-in-out;
-        }
-
-        .exercise-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .exercise-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        /* Set and Delete Buttons */
-        .exercise-details {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        input[type="number"] {
-            padding: 5px;
-            width: 50px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            text-align: center;
-        }
-
-        .delete-btn {
-            background: red;
-            color: white;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .delete-btn:hover {
-            background: darkred;
-        }
+.exercise-details {
+    margin-top: 10px;
+}
+    
     </style>
 </head>
 <body>
@@ -180,13 +89,17 @@
             const card = document.createElement('div');
             card.classList.add('exercise-card');
             card.innerHTML = `
-                <h3>${exercise.name}</h3>
+             <h3>${exercise.name}</h3>
+            <div class="exercise-container" id="exercise-container">
+               
                 <img src="${exercise.gifUrl}" alt="${exercise.name}" />
                 <div class="exercise-details">
-                    <label for="sets-${exercise.id}">Sets:</label>
-                    <input type="number" id="sets-${exercise.id}" min="1" max="10" value="3">
-                    <button class="delete-btn">Delete</button>
+
+                  
                 </div>
+                 
+                </div>
+                 <button class="delete-btn">Delete</button>
             `;
 
             card.querySelector(".delete-btn").addEventListener("click", () => {

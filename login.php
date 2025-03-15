@@ -6,7 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $sql = "SELECT user_id, username, password, gender, age FROM users WHERE email = ?";
+    $sql = "SELECT user_id, username, height, weight, password, gender, age FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -20,6 +20,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['username'] = $row['username'];
             $_SESSION['gender'] = $row['gender'];
             $_SESSION['age'] = $row['age'];
+            $_SESSION['height'] = $row['height'];
+            $_SESSION['weight'] = $row['weight'];
 
             header("Location: home.php");
             exit();

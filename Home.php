@@ -41,10 +41,10 @@ if (isset($_POST['logout'])) {
                 <img class="mainProfileImg-sidebar" src="svg/profile.svg" alt="Profile Image">
                 <div class="name-age-sidebar">
                     <h2 class="username">
-                        Swayam
+                    <?php echo htmlspecialchars($username); ?>
                     </h2>
                     <p class="gender-age">
-                        18 years
+                     <?php echo htmlspecialchars($age);?>
                     </p>
                 </div>
                 
@@ -97,10 +97,10 @@ if (isset($_POST['logout'])) {
         <div class="user-profile">
             <img class="mainProfileImg" src="svg/profile.svg" alt="Profile Image">
             <h2 class="username">
-                Swayam
+            <?php  echo htmlspecialchars($username); ?>
             </h2>
             <p class="gender-age">
-                18 years male
+            <?php echo htmlspecialchars($age); ?> years old
             </p>
 
             <div class="stats">
