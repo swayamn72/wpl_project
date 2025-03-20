@@ -70,8 +70,13 @@ body, html {
 }
 
 /* Navbar */
-
-
+.nav-right{
+  display: flex;
+  gap: 20px;
+}
+.nav-right img{
+  width: 30px;
+}
 .navbar-brand img{
   width: 20px;
 }

@@ -85,9 +85,13 @@ if (isset($_POST['logout'])) {
             <i class="bi bi-calendar3"></i>
             <span class="date" id="selected-date"></span>
         </div>
+        <div class="nav-right">
+            <img src="svg/dark.svg" alt="">
         <form method="post">
             <button type="submit" name="logout" class="btn btn-danger">Logout</button>
         </form>
+        </div>
+        
     </nav>
 
 
