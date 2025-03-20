@@ -6,20 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercise Planner</title>
     <style>
-        .exercise-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
+.exercise-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-between; /* Ensures the days are evenly spaced */
+}
 
-        .day-container {
-            width: 300px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            background: #f3f3f3;
-            border-radius: 8px;
-        }
-
+.day-container {
+    width: calc(33.33% - 20px); /* Ensures 3 days per line */
+    padding: 10px;
+    border: 1px solid #ddd;
+    background: #f3f3f3;
+    border-radius: 8px;
+}
         .exercise-card {
             border: 1px solid #ddd;
             padding: 10px;
@@ -31,7 +31,7 @@
         }
 
         .exercise-card img {
-            width: 80px;
+            width: 180px;
             height: auto;
         }
 
@@ -44,6 +44,34 @@
             cursor: pointer;
             border-radius: 5px;
         }
+
+        .edit-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+#edit-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#day-split-input {
+    padding: 10px;
+    width: 200px;
+    margin-right: 10px;
+}
+
     </style>
 </head>
 <body>
@@ -68,14 +96,57 @@
 
     <!-- Exercise Containers for Each Day -->
     <div class="exercise-container">
-        <div class="day-container" id="Monday"><h2>Monday</h2></div>
-        <div class="day-container" id="Tuesday"><h2>Tuesday</h2></div>
-        <div class="day-container" id="Wednesday"><h2>Wednesday</h2></div>
-        <div class="day-container" id="Thursday"><h2>Thursday</h2></div>
-        <div class="day-container" id="Friday"><h2>Friday</h2></div>
-        <div class="day-container" id="Saturday"><h2>Saturday</h2></div>
-        <div class="day-container" id="Sunday"><h2>Sunday</h2></div>
+        <div class="day-container" id="Monday">
+            <h2>
+                <span id="monday-name">Monday</span>
+                <button class="edit-btn" onclick="editDayName('Monday')">Edit</button>
+            </h2>
+        </div>
+        <div class="day-container" id="Tuesday">
+            <h2>
+                <span id="tuesday-name">Tuesday</span>
+                <button class="edit-btn" onclick="editDayName('Tuesday')">Edit</button>
+            </h2>
+        </div>
+        <div class="day-container" id="Wednesday">
+            <h2>
+                <span id="wednesday-name">Wednesday</span>
+                <button class="edit-btn" onclick="editDayName('Wednesday')">Edit</button>
+            </h2>
+        </div>
+        <div class="day-container" id="Thursday">
+            <h2>
+                <span id="thursday-name">Thursday</span>
+                <button class="edit-btn" onclick="editDayName('Thursday')">Edit</button>
+            </h2>
+        </div>
+        <div class="day-container" id="Friday">
+            <h2>
+                <span id="friday-name">Friday</span>
+                <button class="edit-btn" onclick="editDayName('Friday')">Edit</button>
+            </h2>
+        </div>
+        <div class="day-container" id="Saturday">
+            <h2>
+                <span id="saturday-name">Saturday</span>
+                <button class="edit-btn" onclick="editDayName('Saturday')">Edit</button>
+            </h2>
+        </div>
+        <div class="day-container" id="Sunday">
+            <h2>
+                <span id="sunday-name">Sunday</span>
+                <button class="edit-btn" onclick="editDayName('Sunday')">Edit</button>
+            </h2>
+        </div>
     </div>
+    
+    <!-- Hidden Input for Editing the Day Name -->
+    <div id="edit-modal" style="display: none;">
+        <input type="text" id="day-split-input" />
+        <button onclick="saveDayName()">Save</button>
+        <button onclick="closeEditModal()">Cancel</button>
+    </div>
+    
 
     <script>
         const exerciseNameInput = document.getElementById('exercise-name');
@@ -156,6 +227,33 @@
                 suggestionsDiv.innerHTML = '';
             }
         });
+    </script>
+    <script>
+        let currentDay = ''; // To store the day being edited
+
+const editDayName = (day) => {
+    currentDay = day;
+    const dayNameSpan = document.getElementById(`${day.toLowerCase()}-name`);
+    const currentName = dayNameSpan.textContent;
+
+    // Open the modal with the current name
+    document.getElementById('day-split-input').value = currentName;
+    document.getElementById('edit-modal').style.display = 'block';
+};
+
+const saveDayName = () => {
+    const newName = document.getElementById('day-split-input').value;
+    if (newName) {
+        const dayNameSpan = document.getElementById(`${currentDay.toLowerCase()}-name`);
+        dayNameSpan.textContent = `${currentDay} (${newName})`; // Set the updated name with split
+        closeEditModal();
+    }
+};
+
+const closeEditModal = () => {
+    document.getElementById('edit-modal').style.display = 'none';
+};
+
     </script>
 </body>
 </html>

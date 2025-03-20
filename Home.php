@@ -144,7 +144,7 @@ if (isset($_POST['logout'])) {
         <!-- <h4>Main Content</h4> -->
         <div class="slideshow-container">
             <div class="slideshow" id="slideshow">
-                <div class="card1"><a href="Exercise.html">My Workouts</a></div>
+                <div class="card1"><a href="weekexercise.html">My Workouts</a></div>
                 <div class="card2"><a href="Meal.html">My Meals</a></div>
                 <div class="card3">Card 3</div>
 
