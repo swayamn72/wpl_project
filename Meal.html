@@ -3,23 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meal Tracker</title>
     <link rel="stylesheet" href="Meal.css">
-    <title>Meal Nutrition Info</title>
-    
 </head>
 <body>
-    <div class="mealfull">
-        <div id="searchbar">
-            <form id="searchForm">
-                <input type="text" id="searchInput" placeholder="Enter Your Meal Details">
-                <button type="submit">Search</button>
-            </form>
-        </div>
+    <div class="container">
+        <h2>Track Your Meal</h2>
+        
+        <label for="mealType">Select Meal:</label>
+        <select id="mealType">
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Snacks">Snacks</option>
+            <option value="Dinner">Dinner</option>
+        </select>
+
+        <form id="searchForm">
+            <input type="text" id="searchInput" placeholder="Enter Food Name">
+            <button type="submit">Search</button>
+        </form>
+
         <div id="info"></div>
+        <button id="saveMeal">Save Meal</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        let mealItems = [];
+
         document.getElementById("searchForm").addEventListener("submit", function (e) {
             e.preventDefault();
             var query = document.getElementById("searchInput").value;
@@ -30,42 +41,66 @@
                 headers: { 'X-Api-Key': '1MjVyE4++leUa2iRMXPiOQ==aZSLs6REOYYpkFTj' },
                 contentType: 'application/json',
                 success: function (result) {
-                    console.log(result);
-
                     var infoDiv = document.getElementById("info");
 
                     if (result.items && result.items.length > 0) {
                         result.items.forEach(function (item) {
-                           
+                            var food = {
+                                name: item.name,
+                                calories: item.calories,
+                                protein: item.protein_g,
+                                quantity: 1
+                            };
+
+                            mealItems.push(food);
+                            
                             var card = document.createElement("div");
                             card.classList.add("mealcard");
-
-                          
                             card.innerHTML = `
-                                <h4>${query}</h4>
-                                <p>Food: ${item.name}</p>
-                                <p>Protein: ${item.protein_g}g</p>
-                                <p>Calories: ${item.calories}</p>
+                                <h4>${food.name}</h4>
+                                <p>Calories: ${food.calories}</p>
+                                <p>Protein: ${food.protein}g</p>
                                 <button class="delete-btn">Delete</button>
                             `;
 
-                   
                             card.querySelector(".delete-btn").addEventListener("click", function () {
                                 infoDiv.removeChild(card);
+                                mealItems = mealItems.filter(i => i.name !== food.name);
                             });
 
-                           
                             infoDiv.appendChild(card);
                         });
                     } else {
-                        var noDataMessage = document.createElement("p");
-                        noDataMessage.textContent = "No nutritional information found for the given query.";
-                       
+                        alert("No nutritional data found.");
                     }
                 },
-                error: function ajaxError(jqXHR) {
-                    console.error('Error: ', jqXHR.responseText);
-                    document.getElementById("info").innerHTML = '<p>Failed to fetch nutritional information. Please try again later.</p>';
+                error: function () {
+                    alert("Failed to fetch nutritional information.");
+                }
+            });
+        });
+
+        document.getElementById("saveMeal").addEventListener("click", function () {
+            let mealName = document.getElementById("mealType").value;
+            let mealDate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+
+            if (mealItems.length === 0) {
+                alert("Add food items before saving the meal.");
+                return;
+            }
+
+            let totalCalories = mealItems.reduce((sum, item) => sum + item.calories, 0);
+
+            $.ajax({
+                method: 'POST',
+                url: 'save_meal.php',
+                contentType: 'application/json',
+                data: JSON.stringify({ mealName, mealDate, totalCalories, items: mealItems }),
+                success: function (response) {
+                    alert(response);
+                },
+                error: function () {
+                    alert("Error saving meal.");
                 }
             });
         });
