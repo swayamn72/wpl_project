@@ -1,0 +1,66 @@
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    weight FLOAT,
+    height FLOAT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE food_items (
+    food_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    calories_per_100g FLOAT NOT NULL,
+    protein FLOAT,
+    carbs FLOAT,
+    fats FLOAT
+);
+
+CREATE TABLE meals (
+    meal_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    meal_name ENUM('Breakfast', 'Lunch', 'Dinner', 'Snack') NOT NULL,
+    meal_date DATE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+CREATE TABLE meal_items (
+    meal_item_id INT AUTO_INCREMENT PRIMARY KEY,
+    meal_id INT,
+    food_id INT,
+    quantity FLOAT NOT NULL,
+    FOREIGN KEY (meal_id) REFERENCES meals(meal_id) ON DELETE CASCADE,
+    FOREIGN KEY (food_id) REFERENCES food_items(food_id) ON DELETE CASCADE
+);
+
+ALTER TABLE users
+ADD COLUMN gender VARCHAR(10) NOT NULL,
+ADD COLUMN age INT NOT NULL;
+
+ALTER TABLE meals ADD total_calories FLOAT DEFAULT 0; 
+ALTER TABLE meals MODIFY user_id INT(11) NOT NULL;
+ALTER TABLE food_items ADD serving_size FLOAT DEFAULT 100;
+
+ALTER TABLE food_items 
+ADD COLUMN calories_per_serving FLOAT NOT NULL DEFAULT 0,
+ADD COLUMN sugar FLOAT NULL,
+ADD COLUMN fiber FLOAT NULL;
+
+ALTER TABLE meal_items 
+ADD COLUMN actual_serving_size FLOAT NULL;
+
+ALTER TABLE meals ADD CONSTRAINT fk_meals_user FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE;
+ALTER TABLE meal_items ADD CONSTRAINT fk_meal_items_meal FOREIGN KEY (meal_id) REFERENCES meals(meal_id) ON DELETE CASCADE;
+ALTER TABLE meal_items ADD CONSTRAINT fk_meal_items_food FOREIGN KEY (food_id) REFERENCES food_items(food_id) ON DELETE CASCADE;
+
+-- Alter meals table to set default meal_date to current date
+ALTER TABLE meals 
+MODIFY COLUMN meal_date DATE DEFAULT (CURRENT_DATE);
+
+-- Modify meal_name to only accept predefined values
+ALTER TABLE meals 
+MODIFY COLUMN meal_name ENUM('Breakfast', 'Lunch', 'Snacks', 'Dinner') NOT NULL;
+
+ALTER TABLE food_items ADD CONSTRAINT unique_food_name UNIQUE (name);
