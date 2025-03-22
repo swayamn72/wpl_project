@@ -1,50 +1,63 @@
 <?php
-require "db_connect.php";
-session_start();
+include 'db_connect.php';
+session_start(); // Start session to access logged-in user
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (!isset($_SESSION["user_id"])) {
-        die("User not logged in.");
-    }
+if (!isset($_SESSION['user_id'])) {
+    die("Error: User not logged in.");
+}
 
-    $data = json_decode(file_get_contents("php://input"), true);
-    $user_id = $_SESSION["user_id"];
-    $meal_name = $data["mealName"];
-    $meal_date = date("Y-m-d"); // Automatically set current date
-    $total_calories = $data["totalCalories"];
-    $items = $data["items"];
+$user_id = $_SESSION['user_id']; // Get user ID from session
+$data = json_decode(file_get_contents("php://input"), true);
 
-    // Insert meal into `meals` table
-    $stmt = $conn->prepare("INSERT INTO meals (user_id, meal_name, meal_date, total_calories) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("issd", $user_id, $meal_name, $meal_date, $total_calories);
-    
-    if (!$stmt->execute()) {
-        die("Error inserting meal: " . $stmt->error);
-    }
+$mealName = $data["mealName"];
+$mealDate = $data["mealDate"];
+$totalCalories = $data["totalCalories"];
+$items = $data["items"];
 
-    $meal_id = $stmt->insert_id;
-    $stmt->close();
+// Check if the user exists in the database before inserting
+$stmt = $conn->prepare("SELECT user_id FROM users WHERE user_id = ?");
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$stmt->store_result();
 
-    // Insert food items into `food_items` and `meal_items`
-    foreach ($items as $item) {
-        $name = $item["name"];
-        $calories = $item["calories"];
-        $protein = $item["protein"];
-        $quantity = $item["quantity"];
+if ($stmt->num_rows === 0) {
+    die("Error: User does not exist.");
+}
 
-        $stmt = $conn->prepare("INSERT INTO food_items (name, calories_per_100g, protein, serving_size) VALUES (?, ?, ?, 100) ON DUPLICATE KEY UPDATE food_id=LAST_INSERT_ID(food_id)");
-        $stmt->bind_param("sdd", $name, $calories, $protein);
+// Insert the meal
+$stmt = $conn->prepare("INSERT INTO meals (user_id, meal_name, meal_date, total_calories) VALUES (?, ?, ?, ?)");
+$stmt->bind_param("issd", $user_id, $mealName, $mealDate, $totalCalories);
+$stmt->execute();
+$meal_id = $stmt->insert_id;
+
+foreach ($items as $item) {
+    $food_name = $item["name"];
+    $calories = $item["calories"];
+    $protein = $item["protein"];
+
+    // Check if food exists
+    $stmt = $conn->prepare("SELECT food_id FROM food_items WHERE name = ?");
+    $stmt->bind_param("s", $food_name);
+    $stmt->execute();
+    $stmt->store_result();
+
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($food_id);
+        $stmt->fetch();
+    } else {
+        // Insert new food
+        $stmt = $conn->prepare("INSERT INTO food_items (name, calories_per_100g, protein, serving_size) VALUES (?, ?, ?, 100)");
+        $stmt->bind_param("sdd", $food_name, $calories, $protein);
         $stmt->execute();
         $food_id = $stmt->insert_id;
-        $stmt->close();
-
-        $stmt = $conn->prepare("INSERT INTO meal_items (meal_id, food_id, quantity, actual_serving_size) VALUES (?, ?, ?, 100)");
-        $stmt->bind_param("iii", $meal_id, $food_id, $quantity);
-        $stmt->execute();
-        $stmt->close();
     }
 
-    $conn->close();
-    echo "Meal saved successfully!";
+    // Insert into meal_items
+    $stmt = $conn->prepare("INSERT INTO meal_items (meal_id, food_id, quantity) VALUES (?, ?, ?)");
+    $stmt->bind_param("iid", $meal_id, $food_id, $item["quantity"]);
+    $stmt->execute();
 }
+
+$conn->close();
+echo "Meal saved successfully!";
 ?>

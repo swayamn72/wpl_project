@@ -1,44 +1,105 @@
-body {
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    background: #f4a261; /* Warm FitTrack Theme */
     font-family: Arial, sans-serif;
-    background-color: #f0f8ff;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .container {
-    width: 60%;
-    margin: auto;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0px 0px 10px #ccc;
-    border-radius: 10px;
+    width: 600px;
+    padding: 30px;
+    background: #fce9db;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
 }
 
-select, input, button {
-    margin: 10px;
-    padding: 10px;
+h2, h3 {
+    color: #333;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 12px;
+    text-align: left;
+    color: #555;
+}
+
+/* Dropdown & Input Fields */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: #fff;
+    font-size: 14px;
 }
 
 button {
-    background-color: #007bff;
+    width: 100%;
+    padding: 14px;
+    background: #e76f51;
     color: white;
     border: none;
+    border-radius: 10px;
     cursor: pointer;
+    margin-top: 20px;
+    font-size: 16px;
+    transition: background 0.3s;
+    box-shadow: 0 5px 10px rgba(231, 111, 81, 0.4);
 }
 
 button:hover {
-    background-color: #0056b3;
+    background: #d8573c;
 }
 
+/* Meal Card Styling */
 .mealcard {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 10px;
-    background-color: #fff;
-    display: inline-block;
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.mealcard h4 {
+    margin: 5px 0;
 }
 
 .delete-btn {
-    background-color: red;
+    background: red;
     color: white;
-    margin-top: 5px;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+/* Meal History Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #e76f51;
+    color: white;
 }

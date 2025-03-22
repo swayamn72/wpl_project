@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meal Tracker</title>
-    <link rel="stylesheet" href="Meal.css">
+    <link rel="stylesheet" href="meal.css">
 </head>
 <body>
+
     <div class="container">
-        <h2>Track Your Meal</h2>
-        
+        <h2>Track Your Meals</h2>
+
         <label for="mealType">Select Meal:</label>
         <select id="mealType">
             <option value="Breakfast">Breakfast</option>
@@ -25,12 +26,31 @@
 
         <div id="info"></div>
         <button id="saveMeal">Save Meal</button>
+
+        <h3>Your Daily Intake</h3>
+        <p><strong>Calories:</strong> <span id="totalCalories">0</span> kcal</p>
+        <p><strong>Protein:</strong> <span id="totalProtein">0</span> g</p>
+
+        <h3>Meal History</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Meal</th>
+                    <th>Calories</th>
+                </tr>
+            </thead>
+            <tbody id="mealHistory"></tbody>
+        </table>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         let mealItems = [];
+        let totalCalories = 0;
+        let totalProtein = 0;
 
+        // Search for Food Items
         document.getElementById("searchForm").addEventListener("submit", function (e) {
             e.preventDefault();
             var query = document.getElementById("searchInput").value;
@@ -53,7 +73,11 @@
                             };
 
                             mealItems.push(food);
-                            
+                            totalCalories += food.calories;
+                            totalProtein += food.protein;
+                            document.getElementById("totalCalories").innerText = totalCalories;
+                            document.getElementById("totalProtein").innerText = totalProtein;
+
                             var card = document.createElement("div");
                             card.classList.add("mealcard");
                             card.innerHTML = `
@@ -80,16 +104,15 @@
             });
         });
 
+        // Save Meal to Database
         document.getElementById("saveMeal").addEventListener("click", function () {
             let mealName = document.getElementById("mealType").value;
-            let mealDate = new Date().toISOString().split('T')[0]; // Current date in YYYY-MM-DD format
+            let mealDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
 
             if (mealItems.length === 0) {
                 alert("Add food items before saving the meal.");
                 return;
             }
-
-            let totalCalories = mealItems.reduce((sum, item) => sum + item.calories, 0);
 
             $.ajax({
                 method: 'POST',
@@ -98,12 +121,23 @@
                 data: JSON.stringify({ mealName, mealDate, totalCalories, items: mealItems }),
                 success: function (response) {
                     alert(response);
+                    loadMealHistory(); // Reload table after saving
                 },
                 error: function () {
                     alert("Error saving meal.");
                 }
             });
         });
+
+        // Load Meal History from Database
+        function loadMealHistory() {
+            $.get("get_meals.php", function (data) {
+                document.getElementById("mealHistory").innerHTML = data;
+            });
+        }
+
+        // Load meal history on page load
+        window.onload = loadMealHistory;
     </script>
 </body>
 </html>
