@@ -198,10 +198,48 @@ body, html {
 
 
 /* Menu List */
+/* Sidebar Menu Styling */
 .menuList {
   list-style: none;
-  padding-bottom: 20px;
+  padding: 0;
+  margin-top: 20px;
 }
+
+.menuList li {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  transition: background 0.3s;
+}
+
+.menuList li a {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Space between icon and text */
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+}
+
+.menuList li a img {
+  width: 25px; /* Set icon size */
+  height: 25px;
+}
+
+/* Hover Effect */
+.menuList li:hover {
+  background: #f3f3f3;
+  border-radius: 8px;
+}
+.menuList li {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  transition: background 0.3s;
+}
+
+
 
 
 
@@ -281,6 +319,36 @@ body, html {
   text-align: center;
   transition: 0.3s;
 }
+.card4 {
+  flex: 0 0 300px;
+  height: 200px !important;
+  background: linear-gradient(to right, green, lightgreen);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+
+  text-align: center;
+  transition: 0.3s;
+}
+.card5 {
+  flex: 0 0 300px;
+  height: 200px !important;
+  background: linear-gradient(to right, green, lightgreen);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  font-weight: bold;
+
+  text-align: center;
+  transition: 0.3s;
+}
 
 .card:hover {
   transform: scale(1.05);
@@ -343,4 +411,30 @@ body, html {
 .calendar-day:hover {
   background-color: #ddd;
   cursor: pointer;
+}
+.slideshow-container{
+  background-color: rgb(114, 113, 113);
+  height: 300px;
+  border-radius: 20px;
+}
+.slideshow{
+  padding-left: 20px;
+  overflow-x: auto;
+}
+.slideshowBack, .slideshowNext{
+  width: 40px;
+}
+
+.slideshowButton{
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-right: 70px;
+  margin-top: 20px;
+}
+
+.slideshow-container{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
