@@ -6,71 +6,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exercise Planner</title>
     <style>
-.exercise-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: space-between; /* Ensures the days are evenly spaced */
+    .exercise-container {
+        padding: 10px;
+        margin: 10px;
+        display: flex;
+        flex-direction: column; /* Makes each day a row */
+        gap: 20px;
+        justify-content: flex-start; /* Ensures the days are evenly spaced */
+    }
+    .exercise-card:nth-child(odd) {
+    background: #f9d5e5; /* Light Pink */
 }
 
-.day-container {
-    width: calc(33.33% - 20px); /* Ensures 3 days per line */
-    padding: 10px;
-    border: 1px solid #ddd;
-    background: #f3f3f3;
-    border-radius: 8px;
-}
-        .exercise-card {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-            background: white;
-            margin-top: 10px;
-            border-radius: 5px;
-            position: relative;
-        }
-
-        .exercise-card img {
-            width: 180px;
-            height: auto;
-        }
-
-        .delete-btn {
-            margin-top: 5px;
-            background: red;
-            color: white;
-            border: none;
-            padding: 5px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        .edit-btn {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 14px;
+.exercise-card:nth-child(even) {
+    background: #d5f9e5; /* Light Green */
 }
 
-#edit-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+.exercise-card:nth-child(3n) {
+    background: #e5f1f9; /* Light Blue */
 }
 
-#day-split-input {
-    padding: 10px;
-    width: 200px;
-    margin-right: 10px;
+.exercise-card:nth-child(4n) {
+    background: #f9e5d5; /* Light Orange */
 }
+
+.exercise-card:nth-child(5n) {
+    background: #f9f3e5; /* Light Yellow */
+}
+
+    .day-container {
+        margin-left: 20px;
+        width: 93%;
+        display: flex;
+        flex-wrap: nowrap; /* Keeps exercises in a single row */
+        gap: 20px; /* Space between exercises */
+        padding: 10px;
+        border: 1px solid #ddd;
+        background: #f3f3f3;
+        border-radius: 8px;
+        justify-content: flex-start; /* Aligns exercise cards horizontally */
+        align-items: center; /* Vertically center the day name and button */
+    }
+
+    .day-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-right: 10px;
+    }
+
+    .edit-btn {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        cursor: pointer;
+        border-radius: 5px;
+        font-size: 14px;
+        transition: background-color 0.3s ease;
+    }
+
+    .edit-btn:hover {
+        background: #0056b3;
+    }
+
+    .exercise-card {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+        background: white;
+        margin-top: 10px;
+        border-radius: 5px;
+        position: relative;
+        width: 180px; /* Keeps a fixed width for each exercise card */
+    }
+
+    .exercise-card img {
+        width: 180px;
+        height: auto;
+    }
+
+    .delete-btn {
+        margin-top: 5px;
+        background: red;
+        color: white;
+        border: none;
+        padding: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    #edit-modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #day-split-input {
+        padding: 10px;
+        width: 200px;
+        margin-right: 10px;
+    }
 
     </style>
 </head>
@@ -205,7 +246,7 @@
 
             const card = document.createElement('div');
             card.classList.add('exercise-card');
-            card.innerHTML = `
+            card.innerHTML = `  
                 <h3>${exercise.name}</h3>
                 <img src="${exercise.gifUrl}" alt="${exercise.name}" />
                 <button class="delete-btn">Delete</button>
@@ -231,29 +272,28 @@
     <script>
         let currentDay = ''; // To store the day being edited
 
-const editDayName = (day) => {
-    currentDay = day;
-    const dayNameSpan = document.getElementById(`${day.toLowerCase()}-name`);
-    const currentName = dayNameSpan.textContent;
+        const editDayName = (day) => {
+            currentDay = day;
+            const dayNameSpan = document.getElementById(`${day.toLowerCase()}-name`);
+            const currentName = dayNameSpan.textContent;
 
-    // Open the modal with the current name
-    document.getElementById('day-split-input').value = currentName;
-    document.getElementById('edit-modal').style.display = 'block';
-};
+            // Open the modal with the current name
+            document.getElementById('day-split-input').value = currentName;
+            document.getElementById('edit-modal').style.display = 'block';
+        };
 
-const saveDayName = () => {
-    const newName = document.getElementById('day-split-input').value;
-    if (newName) {
-        const dayNameSpan = document.getElementById(`${currentDay.toLowerCase()}-name`);
-        dayNameSpan.textContent = `${currentDay} (${newName})`; // Set the updated name with split
-        closeEditModal();
-    }
-};
+        const saveDayName = () => {
+            const newName = document.getElementById('day-split-input').value;
+            if (newName) {
+                const dayNameSpan = document.getElementById(`${currentDay.toLowerCase()}-name`);
+                dayNameSpan.textContent = `${currentDay} (${newName})`; // Set the updated name with split
+                closeEditModal();
+            }
+        };
 
-const closeEditModal = () => {
-    document.getElementById('edit-modal').style.display = 'none';
-};
-
+        const closeEditModal = () => {
+            document.getElementById('edit-modal').style.display = 'none';
+        };
     </script>
 </body>
 </html>
