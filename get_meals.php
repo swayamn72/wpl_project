@@ -8,26 +8,18 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-$sql = "SELECT meal_date, meal_name, total_calories FROM meals WHERE user_id = ? ORDER BY meal_date DESC";
+$sql = "SELECT meal_date, meal_name, SUM(total_calories) AS daily_calories FROM meals WHERE user_id = ? GROUP BY meal_date, meal_name ORDER BY meal_date ASC";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$meals = "";
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $meals .= "<tr>
-                      <td>{$row['meal_date']}</td>
-                      <td>{$row['meal_name']}</td>
-                      <td>{$row['total_calories']} kcal</td>
-                   </tr>";
-    }
-} else {
-    $meals = "<tr><td colspan='3'>No meals found</td></tr>";
+$mealData = [];
+while ($row = $result->fetch_assoc()) {
+    $mealData[] = $row;
 }
 
 $stmt->close();
 $conn->close();
-echo $meals;
+echo json_encode($mealData);
 ?>

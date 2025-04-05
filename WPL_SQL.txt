@@ -64,3 +64,4 @@ ALTER TABLE meals
 MODIFY COLUMN meal_name ENUM('Breakfast', 'Lunch', 'Snacks', 'Dinner') NOT NULL;
 
 ALTER TABLE food_items ADD CONSTRAINT unique_food_name UNIQUE (name);
+ALTER TABLE meals ADD COLUMN total_protein FLOAT DEFAULT 0;

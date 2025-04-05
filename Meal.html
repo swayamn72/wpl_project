@@ -50,46 +50,60 @@
         let totalCalories = 0;
         let totalProtein = 0;
 
-        // Search for Food Items
         document.getElementById("searchForm").addEventListener("submit", function (e) {
             e.preventDefault();
-            var query = document.getElementById("searchInput").value;
+            let query = document.getElementById("searchInput").value;
 
             $.ajax({
                 method: 'GET',
                 url: 'https://api.calorieninjas.com/v1/nutrition?query=' + query,
                 headers: { 'X-Api-Key': '1MjVyE4++leUa2iRMXPiOQ==aZSLs6REOYYpkFTj' },
-                contentType: 'application/json',
                 success: function (result) {
-                    var infoDiv = document.getElementById("info");
+                    let infoDiv = document.getElementById("info");
 
                     if (result.items && result.items.length > 0) {
                         result.items.forEach(function (item) {
-                            var food = {
+                            let food = {
                                 name: item.name,
                                 calories: item.calories,
                                 protein: item.protein_g,
-                                quantity: 1
+                                quantity: 100,
+                                caloriesPerGram: item.calories / 100,
+                                proteinPerGram: item.protein_g / 100
                             };
 
                             mealItems.push(food);
-                            totalCalories += food.calories;
-                            totalProtein += food.protein;
-                            document.getElementById("totalCalories").innerText = totalCalories;
-                            document.getElementById("totalProtein").innerText = totalProtein;
+                            updateTotals();
 
-                            var card = document.createElement("div");
+                            let card = document.createElement("div");
                             card.classList.add("mealcard");
                             card.innerHTML = `
                                 <h4>${food.name}</h4>
-                                <p>Calories: ${food.calories}</p>
-                                <p>Protein: ${food.protein}g</p>
+                                <p>Calories: <span class="cal">${food.calories}</span></p>
+                                <p>Protein: <span class="prot">${food.protein}</span>g</p>
+                                <label>Serving Size (g): </label>
+                                <input type="number" class="serving-input" value="100" min="1" data-name="${food.name}">
                                 <button class="delete-btn">Delete</button>
                             `;
 
                             card.querySelector(".delete-btn").addEventListener("click", function () {
                                 infoDiv.removeChild(card);
                                 mealItems = mealItems.filter(i => i.name !== food.name);
+                                updateTotals();
+                            });
+
+                            card.querySelector(".serving-input").addEventListener("input", function () {
+                                let newServing = parseFloat(this.value);
+                                let foodItem = mealItems.find(i => i.name === this.dataset.name);
+                                if (foodItem && newServing > 0) {
+                                    foodItem.quantity = newServing;
+                                    foodItem.calories = (foodItem.caloriesPerGram * newServing).toFixed(2);
+                                    foodItem.protein = (foodItem.proteinPerGram * newServing).toFixed(2);
+
+                                    card.querySelector(".cal").innerText = foodItem.calories;
+                                    card.querySelector(".prot").innerText = foodItem.protein;
+                                    updateTotals();
+                                }
                             });
 
                             infoDiv.appendChild(card);
@@ -97,17 +111,21 @@
                     } else {
                         alert("No nutritional data found.");
                     }
-                },
-                error: function () {
-                    alert("Failed to fetch nutritional information.");
                 }
             });
         });
 
-        // Save Meal to Database
+        function updateTotals() {
+            totalCalories = mealItems.reduce((sum, item) => sum + parseFloat(item.calories), 0);
+            totalProtein = mealItems.reduce((sum, item) => sum + parseFloat(item.protein), 0);
+
+            document.getElementById("totalCalories").innerText = totalCalories.toFixed(2);
+            document.getElementById("totalProtein").innerText = totalProtein.toFixed(2);
+        }
+
         document.getElementById("saveMeal").addEventListener("click", function () {
             let mealName = document.getElementById("mealType").value;
-            let mealDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+            let mealDate = new Date().toISOString().split('T')[0];
 
             if (mealItems.length === 0) {
                 alert("Add food items before saving the meal.");
@@ -118,25 +136,31 @@
                 method: 'POST',
                 url: 'save_meal.php',
                 contentType: 'application/json',
-                data: JSON.stringify({ mealName, mealDate, totalCalories, items: mealItems }),
+                data: JSON.stringify({ mealName, mealDate, totalCalories, totalProtein, items: mealItems }),
                 success: function (response) {
                     alert(response);
-                    loadMealHistory(); // Reload table after saving
-                },
-                error: function () {
-                    alert("Error saving meal.");
+                    loadMealHistory();
                 }
             });
         });
 
-        // Load Meal History from Database
         function loadMealHistory() {
             $.get("get_meals.php", function (data) {
-                document.getElementById("mealHistory").innerHTML = data;
+                let mealHistory = JSON.parse(data);
+                let tableBody = document.getElementById("mealHistory");
+                tableBody.innerHTML = "";
+
+                mealHistory.forEach(meal => {
+                    let row = `<tr>
+                        <td>${meal.meal_date}</td>
+                        <td>${meal.meal_name}</td>
+                        <td>${meal.daily_calories.toFixed(2)} kcal</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
             });
         }
 
-        // Load meal history on page load
         window.onload = loadMealHistory;
     </script>
 </body>
