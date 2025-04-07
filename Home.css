@@ -98,11 +98,6 @@ body, html {
   background-color: #b71c1c;
 }
 
-/* POP-UP SIDEBAR */
-.popUpSidebar{
-  
-  
-}
 
 /* Sidebar */
 .left-bar {
@@ -453,6 +448,7 @@ body, html {
   gap: 15px;
   padding-left: 35px;
   padding-top: 15px;
+  height: 50px;
 }
 .graphBtn{
   display: flex;

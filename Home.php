@@ -1,16 +1,18 @@
 <?php
-//echo htmlspecialchars($username); 
-//php echo htmlspecialchars($gender) . ", " . htmlspecialchars($age) . " Years";
-session_start();
-if (!isset($_SESSION['username'])) {
-    header("Location: login.html"); // Redirect to login if not logged in
+session_start(); // Ensure session starts before any output
+
+// Debug: Check if session is working
+if (!isset($_SESSION["username"])) {
+    header("Location: login.html"); // Redirect if not logged in
     exit();
 }
 
-$username = $_SESSION['username'];
-$gender = $_SESSION['gender'];
-$age = $_SESSION['age'];
+// Store session variables
+$username = $_SESSION['username'] ?? 'Guest';
+$gender = $_SESSION['gender'] ?? 'Unknown';
+$age = $_SESSION['age'] ?? 0;
 
+// Logout logic
 if (isset($_POST['logout'])) {
     session_destroy();
     header("Location: register.html");
@@ -26,11 +28,14 @@ if (isset($_POST['logout'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FitTrack - Home</title>
     <link rel="stylesheet" href="Home.css?v=<?php echo time(); ?>">
-    
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
 
 </head>
+
+
+
 
 <body>
     <!-- Sidebar -->
@@ -171,7 +176,10 @@ if (isset($_POST['logout'])) {
                     <button class="graphBtnCommon graphBtnSleep"><span></span>Sleep</button>
                 </div>
             </div>
+            <div class="actualGraph">
+                <canvas id="mealGraph" width="400" height="200"></canvas>
 
+            </div>
 
         </div>
     </div>
@@ -184,6 +192,8 @@ if (isset($_POST['logout'])) {
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <script>
     // Date Selection
     function formatDate(date) {
@@ -291,7 +301,101 @@ if (isset($_POST['logout'])) {
             }
         });
     });
-    </script>
+    </script>\
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    fetch("fetch_meal_data.php")
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error("Error:", data.error);
+                return;
+            }
+
+            console.log("Fetched Meal Data:", data);
+
+            const labels = data.map(item => item.meal_date);
+            const calories = data.map(item => item.daily_calories);
+
+            const ctx = document.getElementById("mealGraph").getContext("2d");
+
+            if (!ctx) {
+                console.error("Canvas element not found!");
+                return;
+            }
+
+            // Create a gradient for a better visual effect
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, "rgba(255, 0, 0, 0.5)");
+            gradient.addColorStop(1, "rgba(255, 0, 0, 0.1)");
+
+            new Chart(ctx, {
+                type: "line",
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: "Calories Intake",
+                        data: calories,
+                        borderColor: "red",
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        pointRadius: 5,  // Bigger dots for better visibility
+                        pointBackgroundColor: "red",
+                        pointBorderColor: "#fff",
+                        pointHoverRadius: 8,
+                        tension: 0.3, // Smooth curve effect
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: Math.min(...calories) - 200, // Adjust minimum dynamically
+                            grid: {
+                                color: "rgba(200, 200, 200, 0.2)" // Light grid lines
+                            },
+                            ticks: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false // Hide X-axis grid lines for a cleaner look
+                            },
+                            ticks: {
+                                font: {
+                                    size: 14
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: "top",
+                            labels: {
+                                font: {
+                                    size: 14,
+                                    weight: "bold"
+                                },
+                                color: "black"
+                            }
+                        }
+                    }
+                }
+            });
+
+            console.log("Chart updated with better design!");
+        })
+        .catch(error => console.error("Error fetching meal data:", error));
+});
+</script>
+
 
 </body>
 
