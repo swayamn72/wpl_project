@@ -175,6 +175,15 @@ if (isset($_POST['logout'])) {
                     <button class="graphBtnCommon graphBtnMeals"><span></span>Meals</button>
                     <button class="graphBtnCommon graphBtnSleep"><span></span>Sleep</button>
                 </div>
+
+                <div class="toggleMeal">
+                    <span>Calories</span>
+                    <label class="switch">
+                        <input type="checkbox" id="toggleGraph">
+                        <span class="slider"></span>
+                    </label>
+                    <span>Protein</span>
+                </div>
             </div>
             <div class="actualGraph">
                 <canvas id="mealGraph" width="400" height="200"></canvas>
@@ -303,98 +312,133 @@ if (isset($_POST['logout'])) {
     });
     </script>\
     <script>
-document.addEventListener("DOMContentLoaded", function () {
-    fetch("fetch_meal_data.php")
-        .then(response => response.json())
-        .then(data => {
-            if (data.error) {
-                console.error("Error:", data.error);
-                return;
-            }
+    document.addEventListener("DOMContentLoaded", function() {
+        let showProtein = false; // Default: Show Calories
+        const toggleSwitch = document.getElementById("toggleGraph");
 
-            console.log("Fetched Meal Data:", data);
-
-            const labels = data.map(item => item.meal_date);
-            const calories = data.map(item => item.daily_calories);
-
-            const ctx = document.getElementById("mealGraph").getContext("2d");
-
-            if (!ctx) {
-                console.error("Canvas element not found!");
-                return;
-            }
-
-            // Create a gradient for a better visual effect
-            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-            gradient.addColorStop(0, "rgba(255, 0, 0, 0.5)");
-            gradient.addColorStop(1, "rgba(255, 0, 0, 0.1)");
-
-            new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: "Calories Intake",
-                        data: calories,
-                        borderColor: "red",
-                        backgroundColor: gradient,
-                        borderWidth: 2,
-                        pointRadius: 5,  // Bigger dots for better visibility
-                        pointBackgroundColor: "red",
-                        pointBorderColor: "#fff",
-                        pointHoverRadius: 8,
-                        tension: 0.3, // Smooth curve effect
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: false,
-                            min: Math.min(...calories) - 200, // Adjust minimum dynamically
-                            grid: {
-                                color: "rgba(200, 200, 200, 0.2)" // Light grid lines
-                            },
-                            ticks: {
-                                font: {
-                                    size: 14
-                                }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false // Hide X-axis grid lines for a cleaner look
-                            },
-                            ticks: {
-                                font: {
-                                    size: 14
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: true,
-                            position: "top",
-                            labels: {
-                                font: {
-                                    size: 14,
-                                    weight: "bold"
-                                },
-                                color: "black"
-                            }
-                        }
+        function fetchAndRenderGraph() {
+            fetch("fetch_meal_data.php")
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error("Error:", data.error);
+                        return;
                     }
-                }
-            });
 
-            console.log("Chart updated with better design!");
-        })
-        .catch(error => console.error("Error fetching meal data:", error));
-});
-</script>
+                    const labels = data.map(item => item.meal_date);
+                    const calories = data.map(item => item.daily_calories);
+                    const protein = data.map(item => item.daily_protein);
+
+                    const ctx = document.getElementById("mealGraph").getContext("2d");
+
+                    if (!ctx) {
+                        console.error("Canvas element not found!");
+                        return;
+                    }
+
+                    // Destroy previous chart instance if it exists
+                    if (window.myChart) {
+                        window.myChart.destroy();
+                    }
+
+                    // Create a gradient for smooth effect
+                    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                    gradient.addColorStop(0, showProtein ? "rgba(0, 0, 255, 0.5)" : "rgba(255, 0, 0, 0.5)");
+                    gradient.addColorStop(1, showProtein ? "rgba(0, 0, 255, 0.1)" : "rgba(255, 0, 0, 0.1)");
+
+                    const graphData = showProtein ? protein : calories;
+                    const graphLabel = showProtein ? "Protein Intake (g)" : "Calories Intake";
+                    const graphColor = showProtein ? "blue" : "red";
+
+                    // **Fix negative scaling issue**
+                    let minVal = Math.min(...graphData);
+                    let maxVal = Math.max(...graphData);
+
+                    // Ensure the minimum is at least 0 (to avoid negative graph)
+                    if (minVal < 0) minVal = 0;
+
+                    // Set a dynamic buffer to avoid graph touching edges
+                    let buffer = showProtein ? 10 : 200; // Smaller buffer for protein
+
+                    window.myChart = new Chart(ctx, {
+                        type: "line",
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: graphLabel,
+                                data: graphData,
+                                borderColor: graphColor,
+                                backgroundColor: gradient,
+                                borderWidth: 2,
+                                pointRadius: 5,
+                                pointBackgroundColor: graphColor,
+                                pointBorderColor: "#fff",
+                                pointHoverRadius: 8,
+                                tension: 0.3,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            scales: {
+                                y: {
+                                    beginAtZero: true, // Always start from zero
+                                    min: minVal - buffer, // Set min dynamically
+                                    max: maxVal + buffer, // Set max dynamically
+                                    grid: {
+                                        color: "rgba(200, 200, 200, 0.2)"
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                },
+                                x: {
+                                    grid: {
+                                        display: false
+                                    },
+                                    ticks: {
+                                        font: {
+                                            size: 14
+                                        }
+                                    }
+                                }
+                            },
+                            plugins: {
+                                legend: {
+                                    display: true,
+                                    position: "top",
+                                    labels: {
+                                        font: {
+                                            size: 14,
+                                            weight: "bold"
+                                        },
+                                        color: "black"
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    console.log("Graph updated:", graphLabel);
+                })
+                .catch(error => console.error("Error fetching meal data:", error));
+        }
+
+        // Fetch graph data when page loads
+        fetchAndRenderGraph();
+
+        // Toggle between Calories & Protein when switch is clicked
+        toggleSwitch.addEventListener("change", function() {
+            showProtein = toggleSwitch.checked;
+            fetchAndRenderGraph();
+        });
+    });
+    </script>
+
+
 
 
 </body>
