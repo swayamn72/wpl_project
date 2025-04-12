@@ -11,28 +11,56 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $mealName = $data["mealName"];
 $mealDate = $data["mealDate"];
-$totalCalories = $data["totalCalories"];
-$totalProtein = $data["totalProtein"];
 $items = $data["items"];
 
-// Insert meal into meals table
-$stmt = $conn->prepare("INSERT INTO meals (user_id, meal_name, meal_date, total_calories, total_protein) VALUES (?, ?, ?, ?, ?)");
-$stmt->bind_param("issdd", $user_id, $mealName, $mealDate, $totalCalories, $totalProtein);
-$stmt->execute();
+// Calculate total calories and protein
+$totalCalories = 0;
+$totalProtein = 0;
 
-if ($stmt->affected_rows <= 0) {
-    die("Error: Meal insertion failed.");
+foreach ($items as $item) {
+    $totalCalories += floatval($item["calories"]);
+    $totalProtein += floatval($item["protein"]);
 }
 
-$meal_id = $stmt->insert_id;  // Get the last inserted meal ID
+// Check if meal already exists for same user/date/name
+$stmt = $conn->prepare("SELECT meal_id FROM meals WHERE user_id = ? AND meal_name = ? AND meal_date = ?");
+$stmt->bind_param("iss", $user_id, $mealName, $mealDate);
+$stmt->execute();
+$stmt->store_result();
 
+if ($stmt->num_rows > 0) {
+    // Meal exists — update
+    $stmt->bind_result($meal_id);
+    $stmt->fetch();
+
+    // Update totals
+    $update = $conn->prepare("UPDATE meals SET total_calories = ?, total_protein = ? WHERE meal_id = ?");
+    $update->bind_param("ddi", $totalCalories, $totalProtein, $meal_id);
+    $update->execute();
+    $update->close();
+
+    // Delete existing meal_items for this meal
+    $del = $conn->prepare("DELETE FROM meal_items WHERE meal_id = ?");
+    $del->bind_param("i", $meal_id);
+    $del->execute();
+    $del->close();
+} else {
+    // Insert new meal
+    $insert = $conn->prepare("INSERT INTO meals (user_id, meal_name, meal_date, total_calories, total_protein) VALUES (?, ?, ?, ?, ?)");
+    $insert->bind_param("issdd", $user_id, $mealName, $mealDate, $totalCalories, $totalProtein);
+    $insert->execute();
+    $meal_id = $insert->insert_id;
+    $insert->close();
+}
+
+// Insert new meal_items
 foreach ($items as $item) {
     $food_name = $item["name"];
     $calories = $item["calories"];
     $protein = $item["protein"];
     $quantity = $item["quantity"];
 
-    // Check if food item already exists
+    // Check or insert food
     $stmt = $conn->prepare("SELECT food_id FROM food_items WHERE name = ?");
     $stmt->bind_param("s", $food_name);
     $stmt->execute();
@@ -42,28 +70,22 @@ foreach ($items as $item) {
         $stmt->bind_result($food_id);
         $stmt->fetch();
     } else {
-        // Insert new food item
-        $stmt = $conn->prepare("INSERT INTO food_items (name, calories_per_100g, protein, serving_size) VALUES (?, ?, ?, 100)");
-        $stmt->bind_param("sdd", $food_name, $calories, $protein);
-        $stmt->execute();
-
-        if ($stmt->affected_rows <= 0) {
-            die("Error: Food item insertion failed.");
-        }
-
-        $food_id = $stmt->insert_id;
+        $stmt->close();
+        $insertFood = $conn->prepare("INSERT INTO food_items (name, calories_per_100g, protein, serving_size) VALUES (?, ?, ?, 100)");
+        $insertFood->bind_param("sdd", $food_name, $calories, $protein);
+        $insertFood->execute();
+        $food_id = $insertFood->insert_id;
+        $insertFood->close();
+        continue;
     }
 
-    // Insert into meal_items with actual serving size
+    // Insert into meal_items
     $stmt = $conn->prepare("INSERT INTO meal_items (meal_id, food_id, quantity, actual_serving_size) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("iidd", $meal_id, $food_id, $quantity, $quantity);
     $stmt->execute();
-
-    if ($stmt->affected_rows <= 0) {
-        die("Error: Meal item insertion failed.");
-    }
+    $stmt->close();
 }
 
 $conn->close();
-echo "Meal saved successfully!";
+echo "Meal saved/updated successfully!";
 ?>

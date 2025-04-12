@@ -59,7 +59,7 @@ if (isset($_POST['logout'])) {
                 </a>
             </li>
             <li>
-                <a href="Meal.html">
+                <a href="meal2.php">
                     <img src="svg/meals.svg" alt="Meals"> Meals
                 </a>
             </li>
@@ -160,7 +160,7 @@ if (isset($_POST['logout'])) {
             </div>
             <div class="slideshow" id="slideshow">
                 <div class="card1"><a href="weekexercise.html">My Workouts</a></div>
-                <div class="card2"><a href="Meal.html">My Meals</a></div>
+                <div class="card2"><a href="meal2.php">My Meals</a></div>
                 <div class="card3">Card 3</div>
                 <div class="card4">Card 4</div>
                 <div class="card5">Card 5</div>
