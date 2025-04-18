@@ -153,17 +153,16 @@ if (isset($_POST['logout'])) {
     <!-- Main Content -->
     <div class="content">
         <!-- <h4>Main Content</h4> -->
-        <div class="slideshow-container">
+        <div >
             <div class="slideshowButton">
-                <img src="svg/back.svg" class="slideshowBack">
-                <img src="svg/next.svg" class="slideshowNext" alt="">
+                <!-- <img src="svg/back.svg" class="slideshowBack">
+                <img src="svg/next.svg" class="slideshowNext" alt=""> -->
             </div>
             <div class="slideshow" id="slideshow">
                 <div class="card1"><a href="weekexercise.html">My Workouts</a></div>
                 <div class="card2"><a href="meal2.php">My Meals</a></div>
-                <div class="card3">Card 3</div>
-                <div class="card4">Card 4</div>
-                <div class="card5">Card 5</div>
+                <div class="card3"><a href="Sleep.php">Sleep</a></div>
+
 
             </div>
         </div>
