@@ -1,27 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Login.css">
-    <title>Login - FitTrack</title>
-    <style>
-
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Login - Fitness Tracker</title>
 </head>
-
 <body>
-    <div class="login-container">
-        <h2>Login And Continue<br>Your Fitness Journey</h2>
-        <form action="login.php" method="POST">
-            
-            <input type="email" id="email" name="email" placeholder="Email" required>
-            <input type="password" id="password" name="password" placeholder="Password" required>
-            <button type="submit">Login</button>
-        </form>
-        <p>Don't have an account? <a href="register.html">Sign up here</a></p>
+    <header class="top-bar">
+        <div class="menu-icon">&#9776;</div>
+        <h2 class="logo">FIT <span>TRACK</span></h2>
+    </header>
+
+    <div class="page-wrapper">
+        <div class="login-container">
+            <h1>Login And Continue Your Fitness Journey</h1>
+            <form action="login.php" method="POST">
+                <div class="input-group">
+                    <input type="text" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" placeholder="Password" required>
+                </div>
+                <button type="submit">LOGIN</button>
+            </form>
+            <div class="divider">OTHER LOG IN OPTION</div>
+            <p class="register-link">Don't Have An Account? <a href="register.html">Register</a></p>
+        </div>
     </div>
 </body>
-
 </html>
