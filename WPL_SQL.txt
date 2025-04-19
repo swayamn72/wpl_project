@@ -65,3 +65,13 @@ MODIFY COLUMN meal_name ENUM('Breakfast', 'Lunch', 'Snacks', 'Dinner') NOT NULL;
 
 ALTER TABLE food_items ADD CONSTRAINT unique_food_name UNIQUE (name);
 ALTER TABLE meals ADD COLUMN total_protein FLOAT DEFAULT 0;
+
+CREATE TABLE sleep_logs (
+    sleep_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    sleep_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+    sleep_hours FLOAT NOT NULL CHECK (sleep_hours >= 0 AND sleep_hours <= 24),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE (user_id, sleep_date) -- Prevent duplicate entries for same user and date
+);

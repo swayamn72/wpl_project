@@ -161,7 +161,7 @@ if (isset($_POST['logout'])) {
             <div class="slideshow" id="slideshow">
                 <div class="card1"><a href="weekexercise.html">My Workouts</a></div>
                 <div class="card2"><a href="meal2.php">My Meals</a></div>
-                <div class="card3"><a href="Sleep.php">Sleep</a></div>
+                <div class="card3"><a href="sleep.php">Sleep</a></div>
                 <div class="card4"><a href="health.php">Health</a></div>
 
 
@@ -176,7 +176,7 @@ if (isset($_POST['logout'])) {
                     <button class="graphBtnCommon graphBtnSleep"><span></span>Sleep</button>
                 </div>
 
-                <div class="toggleMeal">
+                <div class="toggleMeal" id="toggleSection">
                     <span>Calories</span>
                     <label class="switch">
                         <input type="checkbox" id="toggleGraph">
@@ -187,6 +187,8 @@ if (isset($_POST['logout'])) {
             </div>
             <div class="actualGraph">
                 <canvas id="mealGraph" width="400" height="200"></canvas>
+                <canvas id="sleepGraph" width="400" height="200" style="display: none;"></canvas>
+
 
             </div>
 
@@ -437,6 +439,102 @@ if (isset($_POST['logout'])) {
         });
     });
     </script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const sleepBtn = document.querySelector(".graphBtnSleep");
+    const mealGraph = document.getElementById("mealGraph");
+    const sleepGraph = document.getElementById("sleepGraph");
+    const toggleSection = document.getElementById("toggleSection");
+
+    sleepBtn.addEventListener("click", function () {
+        // Show sleep graph, hide meal graph
+        sleepGraph.style.display = "block";
+        mealGraph.style.display = "none";
+        
+        // Hide the toggle button when viewing the sleep graph
+        toggleSection.style.display = "none";
+
+        fetch("fetch_sleep_data.php")
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    console.error("Error fetching sleep data:", data.error);
+                    return;
+                }
+
+                const labels = data.map(item => item.sleep_date);
+                const hours = data.map(item => item.sleep_hours);
+
+                const ctx = sleepGraph.getContext("2d");
+
+                if (window.sleepChart) {
+                    window.sleepChart.destroy();
+                }
+
+                const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+                gradient.addColorStop(0, "rgba(0, 128, 255, 0.6)");
+                gradient.addColorStop(1, "rgba(0, 128, 255, 0.1)");
+
+                window.sleepChart = new Chart(ctx, {
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: "Sleep Duration (hours)",
+                            data: hours,
+                            borderColor: "#007BFF",
+                            backgroundColor: gradient,
+                            borderWidth: 2,
+                            pointRadius: 5,
+                            fill: true,
+                            tension: 0.3,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 12,
+                                ticks: {
+                                    font: { size: 14 }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: { size: 14 }
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: {
+                                    font: { size: 14 }
+                                }
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error("Sleep graph fetch error:", error));
+    });
+
+    // When Meals button is clicked, show the toggle and meal graph
+    document.querySelector(".graphBtnMeals").addEventListener("click", function () {
+        sleepGraph.style.display = "none";
+        mealGraph.style.display = "block";
+
+        // Show the toggle button when viewing the meals graph
+        toggleSection.style.display = "block";
+
+        // Fetch meal data
+        fetchAndRenderGraph();
+    });
+});
+
+</script>
+
 
 
 
