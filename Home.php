@@ -537,10 +537,32 @@ if (isset($_POST['logout'])) {
 });
 
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Clone cards for infinite scrolling
+    const slideshow = document.getElementById('slideshow');
+    const cards = slideshow.innerHTML;
+    
+    // Duplicate the cards to create a seamless loop
+    slideshow.innerHTML += cards;
+    
+    // Function to restart animation when it completes to create truly infinite loop
+    function restartAnimation() {
+        slideshow.style.animation = 'none';
+        slideshow.offsetHeight; // Trigger reflow
+        slideshow.style.animation = 'slideCards 30s linear infinite';
+    }
+    
+    // Listen for animation end and restart
+    slideshow.addEventListener('animationiteration', function() {
+        // If animation completes, check if we need to reset
+        if (slideshow.getBoundingClientRect().right < window.innerWidth) {
+            restartAnimation();
+        }
+    });
+});
 
-
-
-
+</script>
 
 </body>
 

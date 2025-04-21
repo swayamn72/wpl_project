@@ -4,195 +4,541 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exercise Planner</title>
+    <title>FitTrack - Exercise Planner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-    .exercise-container {
-        padding: 10px;
-        margin: 10px;
-        display: flex;
-        flex-direction: column; /* Makes each day a row */
-        gap: 20px;
-        justify-content: flex-start; /* Ensures the days are evenly spaced */
-    }
-    .exercise-card:nth-child(odd) {
-    background: #f9d5e5; /* Light Pink */
-}
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+            margin: 0;
+            padding: 0;
+        }
 
-.exercise-card:nth-child(even) {
-    background: #d5f9e5; /* Light Green */
-}
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-.exercise-card:nth-child(3n) {
-    background: #e5f1f9; /* Light Blue */
-}
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
 
-.exercise-card:nth-child(4n) {
-    background: #f9e5d5; /* Light Orange */
-}
+        .search-container {
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+        }
 
-.exercise-card:nth-child(5n) {
-    background: #f9f3e5; /* Light Yellow */
-}
+        .search-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.3);
+        }
 
-    .day-container {
-        margin-left: 20px;
-        width: 93%;
-        display: flex;
-        flex-wrap: nowrap; /* Keeps exercises in a single row */
-        gap: 20px; /* Space between exercises */
-        padding: 10px;
-        border: 1px solid #ddd;
-        background: #f3f3f3;
-        border-radius: 8px;
-        justify-content: flex-start; /* Aligns exercise cards horizontally */
-        align-items: center; /* Vertically center the day name and button */
-    }
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
 
-    .day-name {
-        font-size: 18px;
-        font-weight: bold;
-        color: #333;
-        margin-right: 10px;
-    }
+        .search-input {
+            flex-grow: 1;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
 
-    .edit-btn {
-        background: #007bff;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 14px;
-        transition: background-color 0.3s ease;
-    }
+        .search-input:focus {
+            outline: none;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
 
-    .edit-btn:hover {
-        background: #0056b3;
-    }
+        .day-select {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            background-color: rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            min-width: 150px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
 
-    .exercise-card {
-        border: 1px solid #ddd;
-        padding: 10px;
-        text-align: center;
-        background: white;
-        margin-top: 10px;
-        border-radius: 5px;
-        position: relative;
-        width: 180px; /* Keeps a fixed width for each exercise card */
-    }
+        .day-select:focus {
+            outline: none;
+            background-color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
 
-    .exercise-card img {
-        width: 180px;
-        height: auto;
-    }
+        .suggestions {
+            position: absolute;
+            width: calc(100% - 220px);
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            margin-top: 5px;
+        }
 
-    .delete-btn {
-        margin-top: 5px;
-        background: red;
-        color: white;
-        border: none;
-        padding: 5px;
-        cursor: pointer;
-        border-radius: 5px;
-    }
+        .suggestion-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
 
-    #edit-modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+        .suggestion-item:hover {
+            background-color: #f1f5f9;
+        }
 
-    #day-split-input {
-        padding: 10px;
-        width: 200px;
-        margin-right: 10px;
-    }
+        .exercise-container {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
 
+        .day-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border-left: 6px solid transparent;
+        }
+
+        .day-container:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-3px);
+        }
+
+        #Monday { border-left-color: #ec4899; }
+        #Tuesday { border-left-color: #8b5cf6; }
+        #Wednesday { border-left-color: #3b82f6; }
+        #Thursday { border-left-color: #10b981; }
+        #Friday { border-left-color: #f59e0b; }
+        #Saturday { border-left-color: #ef4444; }
+        #Sunday { border-left-color: #6366f1; }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .day-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-right: 15px;
+        }
+
+        .edit-btn {
+            background: transparent;
+            color: #3b82f6;
+            border: 1px solid #3b82f6;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .edit-btn:hover {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .exercises-wrapper {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
+
+        .exercises-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .exercises-wrapper::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+        
+        .exercises-wrapper::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        
+        .exercises-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        .exercise-card {
+            width: 220px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .exercise-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .exercise-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            padding: 15px;
+            text-align: center;
+            color: #1e293b;
+            background: #f8fafc;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .exercise-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .delete-btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: #ef4444;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+        }
+
+        #edit-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            z-index: 1000;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1e293b;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .save-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+        }
+
+        .save-btn:hover {
+            background: #2563eb;
+        }
+
+        .cancel-btn {
+            background: white;
+            color: #64748b;
+            border: 1px solid #cbd5e1;
+        }
+
+        .cancel-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .empty-day-message {
+            text-align: center;
+            padding: 30px;
+            color: #94a3b8;
+            font-size: 15px;
+        }
+
+        .add-exercise-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #94a3b8;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .add-exercise-indicator i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .suggestions {
+                width: 100%;
+            }
+            
+            .day-container {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="app-container">
+        <div class="header animate__animated animate__fadeIn">
+            <h1 class="text-4xl font-bold text-indigo-600">FitTrack</h1>
+            <p class="text-lg text-gray-600">Your Personal Exercise Planner</p>
+        </div>
 
-    <div class="w-[90%] h-[100%] rounded-lg bg-gradient-to-r from-blue-200 to-blue-400 p-4 shadow-lg mt-4 ml-10">
-        <p class="text-white font-bold">Enter Your Exercise</p>
-        <form id="search-form">
-            <input type="text" id="exercise-name" placeholder="Enter Exercise Name..." autocomplete="off" />
-            <select id="day-select">
-                <option value="">Select Day</option>
-                <option value="Monday">Monday</option>
-                <option value="Tuesday">Tuesday</option>
-                <option value="Wednesday">Wednesday</option>
-                <option value="Thursday">Thursday</option>
-                <option value="Friday">Friday</option>
-                <option value="Saturday">Saturday</option>
-                <option value="Sunday">Sunday</option>
-            </select>
-            <div id="suggestions" class="suggestions"></div>
-        </form>
-    </div>
+        <div class="search-container animate__animated animate__fadeInUp">
+            <h2 class="text-xl font-semibold text-white mb-4">Add New Exercise</h2>
+            <form id="search-form" class="search-form">
+                <input type="text" id="exercise-name" class="search-input" placeholder="Search for an exercise..." autocomplete="off" />
+                <select id="day-select" class="day-select">
+                    <option value="">Select Day</option>
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                    <option value="Saturday">Saturday</option>
+                    <option value="Sunday">Sunday</option>
+                </select>
+                <div id="suggestions" class="suggestions"></div>
+            </form>
+        </div>
 
-    <!-- Exercise Containers for Each Day -->
-    <div class="exercise-container">
-        <div class="day-container" id="Monday">
-            <h2>
-                <span id="monday-name">Monday</span>
-                <button class="edit-btn" onclick="editDayName('Monday')">Edit</button>
-            </h2>
-        </div>
-        <div class="day-container" id="Tuesday">
-            <h2>
-                <span id="tuesday-name">Tuesday</span>
-                <button class="edit-btn" onclick="editDayName('Tuesday')">Edit</button>
-            </h2>
-        </div>
-        <div class="day-container" id="Wednesday">
-            <h2>
-                <span id="wednesday-name">Wednesday</span>
-                <button class="edit-btn" onclick="editDayName('Wednesday')">Edit</button>
-            </h2>
-        </div>
-        <div class="day-container" id="Thursday">
-            <h2>
-                <span id="thursday-name">Thursday</span>
-                <button class="edit-btn" onclick="editDayName('Thursday')">Edit</button>
-            </h2>
-        </div>
-        <div class="day-container" id="Friday">
-            <h2>
-                <span id="friday-name">Friday</span>
-                <button class="edit-btn" onclick="editDayName('Friday')">Edit</button>
-            </h2>
-        </div>
-        <div class="day-container" id="Saturday">
-            <h2>
-                <span id="saturday-name">Saturday</span>
-                <button class="edit-btn" onclick="editDayName('Saturday')">Edit</button>
-            </h2>
-        </div>
-        <div class="day-container" id="Sunday">
-            <h2>
-                <span id="sunday-name">Sunday</span>
-                <button class="edit-btn" onclick="editDayName('Sunday')">Edit</button>
-            </h2>
+        <!-- Exercise Containers for Each Day -->
+        <div class="exercise-container">
+            <div class="day-container animate__animated animate__fadeInLeft" id="Monday">
+                <div class="day-header">
+                    <h2 class="day-name">
+                        <span id="monday-name">Monday</span>
+                    </h2>
+                    <button class="edit-btn" onclick="editDayName('Monday')">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                <div class="exercises-wrapper" id="monday-exercises">
+                    <div class="add-exercise-indicator animate-pulse">
+                        <i class="fas fa-plus-circle"></i> Search and add exercises here
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-container animate__animated animate__fadeInLeft" id="Tuesday">
+                <div class="day-header">
+                    <h2 class="day-name">
+                        <span id="tuesday-name">Tuesday</span>
+                    </h2>
+                    <button class="edit-btn" onclick="editDayName('Tuesday')">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                <div class="exercises-wrapper" id="tuesday-exercises">
+                    <div class="add-exercise-indicator animate-pulse">
+                        <i class="fas fa-plus-circle"></i> Search and add exercises here
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-container animate__animated animate__fadeInLeft" id="Wednesday">
+                <div class="day-header">
+                    <h2 class="day-name">
+                        <span id="wednesday-name">Wednesday</span>
+                    </h2>
+                    <button class="edit-btn" onclick="editDayName('Wednesday')">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                <div class="exercises-wrapper" id="wednesday-exercises">
+                    <div class="add-exercise-indicator animate-pulse">
+                        <i class="fas fa-plus-circle"></i> Search and add exercises here
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-container animate__animated animate__fadeInLeft" id="Thursday">
+                <div class="day-header">
+                    <h2 class="day-name">
+                        <span id="thursday-name">Thursday</span>
+                    </h2>
+                    <button class="edit-btn" onclick="editDayName('Thursday')">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                <div class="exercises-wrapper" id="thursday-exercises">
+                    <div class="add-exercise-indicator animate-pulse">
+                        <i class="fas fa-plus-circle"></i> Search and add exercises here
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-container animate__animated animate__fadeInLeft" id="Friday">
+                <div class="day-header">
+                    <h2 class="day-name">
+                        <span id="friday-name">Friday</span>
+                    </h2>
+                    <button class="edit-btn" onclick="editDayName('Friday')">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                <div class="exercises-wrapper" id="friday-exercises">
+                    <div class="add-exercise-indicator animate-pulse">
+                        <i class="fas fa-plus-circle"></i> Search and add exercises here
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-container animate__animated animate__fadeInLeft" id="Saturday">
+                <div class="day-header">
+                    <h2 class="day-name">
+                        <span id="saturday-name">Saturday</span>
+                    </h2>
+                    <button class="edit-btn" onclick="editDayName('Saturday')">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                <div class="exercises-wrapper" id="saturday-exercises">
+                    <div class="add-exercise-indicator animate-pulse">
+                        <i class="fas fa-plus-circle"></i> Search and add exercises here
+                    </div>
+                </div>
+            </div>
+            
+            <div class="day-container animate__animated animate__fadeInLeft" id="Sunday">
+                <div class="day-header">
+                    <h2 class="day-name">
+                        <span id="sunday-name">Sunday</span>
+                    </h2>
+                    <button class="edit-btn" onclick="editDayName('Sunday')">
+                        <i class="fas fa-edit mr-1"></i> Edit
+                    </button>
+                </div>
+                <div class="exercises-wrapper" id="sunday-exercises">
+                    <div class="add-exercise-indicator animate-pulse">
+                        <i class="fas fa-plus-circle"></i> Search and add exercises here
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     
-    <!-- Hidden Input for Editing the Day Name -->
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay"></div>
+    
+    <!-- Edit Modal -->
     <div id="edit-modal" style="display: none;">
-        <input type="text" id="day-split-input" />
-        <button onclick="saveDayName()">Save</button>
-        <button onclick="closeEditModal()">Cancel</button>
+        <div class="modal-header">Edit Day Split</div>
+        <input type="text" id="day-split-input" class="modal-input" placeholder="Enter split name (e.g., Chest Day)" />
+        <div class="modal-buttons">
+            <button class="modal-btn cancel-btn" onclick="closeEditModal()">Cancel</button>
+            <button class="modal-btn save-btn" onclick="saveDayName()">Save</button>
+        </div>
     </div>
-    
 
     <script>
         const exerciseNameInput = document.getElementById('exercise-name');
         const suggestionsDiv = document.getElementById('suggestions');
         const daySelect = document.getElementById('day-select');
+        const modalOverlay = document.getElementById('modal-overlay');
+
+        // Initialize exercise wrappers
+        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        const exerciseWrappers = {};
+        
+        days.forEach(day => {
+            exerciseWrappers[day] = document.getElementById(`${day.toLowerCase()}-exercises`);
+        });
 
         const fetchExercises = async (query) => {
             const url = `https://exercisedb.p.rapidapi.com/exercises/name/${query}`;
@@ -210,7 +556,7 @@
                 return await response.json();
             } catch (error) {
                 console.error(error);
-                alert('Error fetching exercises.');
+                showNotification('Error fetching exercises', 'error');
                 return [];
             }
         };
@@ -230,7 +576,7 @@
                 suggestionItem.addEventListener('click', () => {
                     const selectedDay = daySelect.value;
                     if (!selectedDay) {
-                        alert("Please select a day first.");
+                        showNotification("Please select a day first", "warning");
                         return;
                     }
                     addExerciseToDay(exercise, selectedDay);
@@ -242,21 +588,69 @@
         };
 
         const addExerciseToDay = (exercise, day) => {
-            const dayContainer = document.getElementById(day);
+            // Remove placeholder if it exists
+            const wrapper = exerciseWrappers[day];
+            const placeholder = wrapper.querySelector('.add-exercise-indicator');
+            if (placeholder) {
+                placeholder.remove();
+            }
 
             const card = document.createElement('div');
-            card.classList.add('exercise-card');
+            card.classList.add('exercise-card', 'animate__animated', 'animate__fadeIn');
             card.innerHTML = `  
-                <h3>${exercise.name}</h3>
-                <img src="${exercise.gifUrl}" alt="${exercise.name}" />
-                <button class="delete-btn">Delete</button>
+                <h3 title="${exercise.name}">${exercise.name}</h3>
+                <img src="${exercise.gifUrl}" alt="${exercise.name}" loading="lazy" />
+                <button class="delete-btn"><i class="fas fa-trash-alt mr-2"></i>Remove</button>
             `;
 
             card.querySelector(".delete-btn").addEventListener("click", () => {
-                card.remove();
+                card.classList.add('animate__fadeOut');
+                setTimeout(() => {
+                    card.remove();
+                    // Add placeholder if no exercises left
+                    if (wrapper.children.length === 0) {
+                        wrapper.innerHTML = `
+                            <div class="add-exercise-indicator animate-pulse">
+                                <i class="fas fa-plus-circle"></i> Search and add exercises here
+                            </div>
+                        `;
+                    }
+                }, 500);
             });
 
-            dayContainer.appendChild(card);
+            wrapper.appendChild(card);
+            showNotification(`Added ${exercise.name} to ${day}`, "success");
+        };
+
+        // Notification system
+        const showNotification = (message, type = "info") => {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-5 right-5 p-4 rounded-lg shadow-lg z-50 animate__animated animate__fadeIn ${
+                type === 'error' ? 'bg-red-500' : 
+                type === 'success' ? 'bg-green-500' : 
+                type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
+            } text-white`;
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas fa-${
+                        type === 'error' ? 'exclamation-circle' : 
+                        type === 'success' ? 'check-circle' : 
+                        type === 'warning' ? 'exclamation-triangle' : 'info-circle'
+                    } mr-3"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.remove('animate__fadeIn');
+                notification.classList.add('animate__fadeOut');
+                setTimeout(() => {
+                    notification.remove();
+                }, 500);
+            }, 3000);
         };
 
         exerciseNameInput.addEventListener('input', async () => {
@@ -268,9 +662,16 @@
                 suggestionsDiv.innerHTML = '';
             }
         });
-    </script>
-    <script>
-        let currentDay = ''; // To store the day being edited
+
+        // Click outside to close suggestions
+        document.addEventListener('click', (e) => {
+            if (!exerciseNameInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                suggestionsDiv.innerHTML = '';
+            }
+        });
+
+        // Day name editing
+        let currentDay = '';
 
         const editDayName = (day) => {
             currentDay = day;
@@ -280,20 +681,45 @@
             // Open the modal with the current name
             document.getElementById('day-split-input').value = currentName;
             document.getElementById('edit-modal').style.display = 'block';
+            modalOverlay.style.display = 'block';
         };
 
         const saveDayName = () => {
             const newName = document.getElementById('day-split-input').value;
             if (newName) {
                 const dayNameSpan = document.getElementById(`${currentDay.toLowerCase()}-name`);
-                dayNameSpan.textContent = `${currentDay} (${newName})`; // Set the updated name with split
+                
+                // Check if it's just the day name or already has a split name
+                if (newName === currentDay) {
+                    dayNameSpan.textContent = currentDay;
+                } else if (newName.startsWith(currentDay)) {
+                    dayNameSpan.textContent = newName;
+                } else {
+                    dayNameSpan.textContent = `${currentDay} (${newName})`;
+                }
+                
                 closeEditModal();
+                showNotification(`Updated ${currentDay} to ${dayNameSpan.textContent}`, "success");
             }
         };
 
         const closeEditModal = () => {
             document.getElementById('edit-modal').style.display = 'none';
+            modalOverlay.style.display = 'none';
         };
+
+        // Close modal when clicking on overlay
+        modalOverlay.addEventListener('click', closeEditModal);
+        
+        // Initialize with animation delay for staggered effect
+        document.addEventListener('DOMContentLoaded', () => {
+            const dayContainers = document.querySelectorAll('.day-container');
+            dayContainers.forEach((container, index) => {
+                setTimeout(() => {
+                    container.style.visibility = 'visible';
+                }, index * 100);
+            });
+        });
     </script>
 </body>
 </html>
