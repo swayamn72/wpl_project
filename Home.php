@@ -11,6 +11,9 @@ if (!isset($_SESSION["username"])) {
 $username = $_SESSION['username'] ?? 'Guest';
 $gender = $_SESSION['gender'] ?? 'Unknown';
 $age = $_SESSION['age'] ?? 0;
+$height = $_SESSION['height'] ?? 'N/A';
+$weight = $_SESSION['weight'] ?? 'N/A';
+
 
 // Logout logic
 if (isset($_POST['logout'])) {
@@ -26,7 +29,7 @@ if (isset($_POST['logout'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitTrack - Home</title>
+    <title>FitTrack - Achievements</title>
     <link rel="stylesheet" href="Home.css?v=<?php echo time(); ?>">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -69,12 +72,12 @@ if (isset($_POST['logout'])) {
                 </a>
             </li>
             <li>
-                <a href="achievements.html">
+                <a href="achievements.php">
                     <img src="svg/medal.svg" alt="Achievements"> Achievements
                 </a>
             </li>
             <li>
-                <a href="settings.html">
+                <a href="settings.php">
                     <img src="svg/settings.svg" alt="Settings"> Settings
                 </a>
             </li>
@@ -118,12 +121,12 @@ if (isset($_POST['logout'])) {
             <div class="stats">
                 <div class="stat">
                     <span class="label">Height</span>
-                    <!-- <span class="value"><?php echo htmlspecialchars($height); ?> cm</span> -->
+                    <span class="value"><?php echo htmlspecialchars($height); ?> </span>
                 </div>
                 <div class="separator">|</div>
                 <div class="stat">
                     <span class="label">Weight</span>
-                    <!-- <span class="value"><?php echo htmlspecialchars($weight); ?> kg</span> -->
+                    <span class="value"><?php echo htmlspecialchars($weight); ?> </span>
                 </div>
             </div>
 

@@ -6,6 +6,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
 
+    // Fetch user details
     $sql = "SELECT user_id, username, height, weight, password, gender, age FROM users WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
@@ -23,6 +24,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['height'] = $row['height'];
             $_SESSION['weight'] = $row['weight'];
 
+            // Check if the login entry already exists for today
+            $user_id = $_SESSION['user_id'];
+            $today = date("Y-m-d");
+
+            $check_sql = "SELECT * FROM login_logs WHERE user_id = ? AND login_date = ?";
+            $check_stmt = $conn->prepare($check_sql);
+            $check_stmt->bind_param("is", $user_id, $today);
+            $check_stmt->execute();
+            $check_result = $check_stmt->get_result();
+
+            if ($check_result->num_rows == 0) {
+                // Insert login log if it doesn't exist
+                $insert_sql = "INSERT INTO login_logs (user_id, login_date) VALUES (?, ?)";
+                $insert_stmt = $conn->prepare($insert_sql);
+                $insert_stmt->bind_param("is", $user_id, $today);
+                $insert_stmt->execute();
+                $insert_stmt->close();
+            }
+
+            $check_stmt->close();
+
+            // Redirect to the home page
             header("Location: home.php");
             exit();
         } else {

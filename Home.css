@@ -317,7 +317,7 @@ body, html {
 .card4 {
   flex: 0 0 300px;
   height: 200px !important;
-  background: linear-gradient(to right, green, lightgreen);
+  background: linear-gradient(to right, rgb(250, 101, 255), rgb(250, 243, 250));
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -436,11 +436,10 @@ body, html {
 
 .graphContainer{
   background-color: white;
-  margin-top: 10px ;
+  margin-top: 30px ;
   margin-right: 10px ;
   height: 50vh;
   width: auto;
-  border: 2px solid red;
   border-radius: 45px;
 }
 .graphHeading{

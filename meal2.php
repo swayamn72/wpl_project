@@ -32,10 +32,10 @@ $age = $_SESSION['age'];
     </div>
     <ul class="menuList">
         <li><a href="home.php"><img src="svg/home.svg" alt="Home"> Home</a></li>
-        <li><a href="Meal.html"><img src="svg/meals.svg" alt="Meals"> Meals</a></li>
+        <li><a href="meal2.php"><img src="svg/meals.svg" alt="Meals"> Meals</a></li>
         <li><a href="weekexercise.html"><img src="svg/dumbell.svg" alt="Exercises"> Exercises</a></li>
-        <li><a href="achievements.html"><img src="svg/medal.svg" alt="Achievements"> Achievements</a></li>
-        <li><a href="settings.html"><img src="svg/settings.svg" alt="Settings"> Settings</a></li>
+        <li><a href="achievements.php"><img src="svg/medal.svg" alt="Achievements"> Achievements</a></li>
+        <li><a href="settings.php"><img src="svg/settings.svg" alt="Settings"> Settings</a></li>
     </ul>
 </div>
 

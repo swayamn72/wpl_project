@@ -75,3 +75,16 @@ CREATE TABLE sleep_logs (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     UNIQUE (user_id, sleep_date) -- Prevent duplicate entries for same user and date
 );
+
+CREATE TABLE login_logs (
+    login_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    login_date DATE NOT NULL DEFAULT (CURRENT_DATE),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE (user_id, login_date) -- Prevent multiple logins on the same day
+);
+ALTER TABLE users ADD COLUMN login_streak INT DEFAULT 0;
+
+ALTER TABLE users
+ADD COLUMN achievement VARCHAR(255) DEFAULT NULL;
