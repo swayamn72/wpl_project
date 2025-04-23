@@ -176,6 +176,8 @@ $age = $_SESSION['age'];
             padding: 20px;
             box-shadow: var(--shadow-sm);
             margin: 30px 0;
+            max-width: 700px;
+            max-height: 400px;
         }
         
         .chart-title {
@@ -420,7 +422,7 @@ $age = $_SESSION['age'];
                 <i class="fas fa-chart-line"></i>
                 Sleep Hours - Last 10 Days
             </div>
-            <canvas id="sleepChart" height="300"></canvas>
+            <canvas id="sleepChart" height="300" style="max-width: 100%; max-height: 400px;"></canvas>
         </div>
         
         <!-- Tips Section -->

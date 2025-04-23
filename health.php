@@ -44,7 +44,7 @@ $age = $_SESSION['age'];
 <nav class="navbar navbar-light bg-light px-3 d-flex justify-content-between align-items-center">
     <div class="navbar-brand">
         <div class="menuIcon" id="menuIcon"><img src="svg/hamburger.svg" alt=""></div>
-        <div class="mainName">FitTrack - Meals</div>
+        <div class="mainName">FitTrack - Health</div>
     </div>
     <div class="nav-right">
         <img src="svg/bell.svg" alt="">

@@ -3,7 +3,8 @@ include 'db_connect.php';
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    die("Error: User not logged in.");
+    echo json_encode(["success" => false, "message" => "Error: User not logged in."]);
+    exit();
 }
 
 $user_id = $_SESSION['user_id'];
@@ -87,5 +88,5 @@ foreach ($items as $item) {
 }
 
 $conn->close();
-echo "Meal saved/updated successfully!";
+echo json_encode(["success" => true, "message" => "Meal saved/updated successfully!"]);
 ?>

@@ -16,647 +16,11 @@ $age = $_SESSION['age'];
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="meal3.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
         
-        :root {
-            --primary-color: #4f46e5;
-            --primary-light: #eef2ff;
-            --primary-dark: #3730a3;
-            --secondary-color: #10b981;
-            --secondary-light: #d1fae5;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-            --light-gray: #f3f4f6;
-            --medium-gray: #e5e7eb;
-            --dark-gray: #6b7280;
-            --text-dark: #1f2937;
-            --text-light: #9ca3af;
-            --white: #ffffff;
-            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            --transition: all 0.3s ease;
-        }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8fafc;
-            color: var(--text-dark);
-            min-height: 100vh;
-            position: relative;
-            padding-bottom: 40px;
-        }
-        
-        /* Navbar Styles */
-        .navbar {
-            background: var(--white);
-            box-shadow: var(--shadow-md);
-            padding: 15px 20px;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-        
-        .menuIcon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .menuIcon:hover {
-            background-color: var(--light-gray);
-        }
-        
-        .mainName {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--primary-color);
-            letter-spacing: 0.5px;
-        }
-        
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        
-        .nav-right img {
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .nav-right img:hover {
-            opacity: 0.7;
-        }
-        
-        .btn-danger {
-            background-color: var(--danger-color);
-            border-color: var(--danger-color);
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        
-        .btn-danger:hover {
-            background-color: #dc2626;
-            border-color: #dc2626;
-            transform: translateY(-2px);
-        }
-        
-        /* Sidebar Styles */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -400px;
-            width: 300px;
-            height: 100vh;
-            background: var(--white);
-            box-shadow: var(--shadow-lg);
-            z-index: 1000;
-            transition: var(--transition);
-            overflow-y: auto;
-            padding: 20px 0;
-        }
-        
-        #closeSidebar {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: transparent;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-        
-        #closeSidebar:hover {
-            background-color: var(--light-gray);
-        }
-        
-        .user-profile-sidebar {
-            padding: 20px;
-            border-bottom: 1px solid var(--medium-gray);
-            margin-bottom: 20px;
-        }
-        
-        .top-profile-sidebar {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .mainProfileImg-sidebar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-light);
-        }
-        
-        .name-age-sidebar h2 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 0;
-        }
-        
-        .gender-age {
-            font-size: 14px;
-            color: var(--text-light);
-            margin-bottom: 0;
-        }
-        
-        .menuList {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-        
-        .menuList li {
-            margin-bottom: 5px;
-        }
-        
-        .menuList li a {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 25px;
-            text-decoration: none;
-            color: var(--text-dark);
-            transition: var(--transition);
-            font-weight: 500;
-        }
-        
-        .menuList li a:hover {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-        }
-        
-        .menuList li a img {
-            width: 20px;
-            height: 20px;
-        }
-        
-        /* Content Styles */
-        .content {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: var(--white);
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            margin-top: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .content h2 {
-            font-size: 24px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 25px;
-            position: relative;
-            padding-bottom: 12px;
-        }
-        
-        .content h2::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 60px;
-            height: 4px;
-            background: var(--primary-color);
-            border-radius: 10px;
-        }
-        
-        label {
-            font-weight: 500;
-            margin-bottom: 8px;
-            display: block;
-            color: var(--text-dark);
-        }
-        
-        .form-select, .form-control {
-            border-radius: 8px;
-            border: 1px solid var(--medium-gray);
-            padding: 12px 15px;
-            transition: var(--transition);
-        }
-        
-        .form-select:focus, .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-        }
-        
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--primary-dark);
-            border-color: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-        
-        .btn-success {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            border-radius: 8px;
-            padding: 12px 24px;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        
-        .btn-success:hover {
-            background-color: #059669;
-            border-color: #059669;
-            transform: translateY(-2px);
-        }
-        
-        /* Meal Cards */
-        .mealcard {
-            border-radius: 12px;
-            border: 1px solid var(--medium-gray);
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            padding: 20px !important;
-            margin-bottom: 15px !important;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .mealcard:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-3px);
-        }
-        
-        .mealcard h5 {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 15px;
-            text-transform: capitalize;
-        }
-        
-        .mealcard p {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            color: var(--text-dark);
-        }
-        
-        .mealcard::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 5px;
-            height: 100%;
-            background: var(--primary-color);
-            border-radius: 4px 0 0 4px;
-        }
-        
-        .serving-input {
-            border-radius: 8px;
-            margin: 10px 0;
-            width: 100%;
-        }
-        
-        .delete-btn {
-            background-color: #fee2e2;
-            color: var(--danger-color);
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .delete-btn:hover {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        
-        /* Stats Area */
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .stat-card {
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-        
-        .stat-card.calories {
-            background-color: #fee2e2;
-            color: #b91c1c;
-        }
-        
-        .stat-card.protein {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-        
-        .stat-icon {
-            font-size: 24px;
-            margin-bottom: 12px;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .stat-label {
-            font-size: 14px;
-            opacity: 0.8;
-        }
-        
-        /* Table Styles */
-        .table-container {
-            margin: 30px 0;
-            box-shadow: var(--shadow-sm);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        
-        .table {
-            margin-bottom: 0;
-            border-collapse: collapse;
-        }
-        
-        .table th {
-            background-color: var(--primary-light);
-            color: var(--primary-color);
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: none;
-            padding: 15px;
-        }
-        
-        .table td {
-            padding: 15px;
-            vertical-align: middle;
-            color: var(--text-dark);
-            border-color: var(--medium-gray);
-        }
-        
-        .table tbody tr {
-            transition: var(--transition);
-        }
-        
-        .table tbody tr:hover {
-            background-color: var(--light-gray);
-        }
-        
-        /* Search Form */
-        .search-area {
-            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: var(--shadow-md);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .search-area::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            transform: translate(40%, -40%);
-        }
-        
-        .search-area h3 {
-            color: white;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-        
-        .search-form-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .search-form-wrapper select,
-        .search-form-wrapper .search-input-group {
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 8px;
-            border: none;
-        }
-        
-        .search-input-group {
-            display: flex;
-            overflow: hidden;
-        }
-        
-        .search-input-group input {
-            flex-grow: 1;
-            border: none;
-            border-radius: 8px 0 0 8px;
-            padding: 12px 15px;
-        }
-        
-        .search-input-group input:focus {
-            outline: none;
-            box-shadow: none;
-        }
-        
-        .search-input-group button {
-            border-radius: 0 8px 8px 0;
-            padding: 0 20px;
-            background-color: white;
-            color: var(--primary-color);
-            border: none;
-            font-weight: 500;
-            transition: var(--transition);
-        }
-        
-        .search-input-group button:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        /* Empty State */
-        .empty-state {
-            padding: 40px 20px;
-            text-align: center;
-            color: var(--text-light);
-        }
-        
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
-            color: var(--medium-gray);
-        }
-        
-        /* Progress Bar */
-        .progress-container {
-            margin: 20px 0;
-        }
-        
-        .progress-label {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        
-        .progress-bar-outer {
-            height: 8px;
-            background-color: var(--light-gray);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        
-        .progress-bar-inner {
-            height: 100%;
-            background: linear-gradient(to right, #4f46e5, #2563eb);
-            border-radius: 4px;
-            transition: width 0.5s ease;
-        }
-        
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease-in-out;
-        }
-        
-        .scale-in {
-            animation: scaleIn 0.3s ease-in-out;
-        }
-        
-        /* Notification */
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-        
-        .notification.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-        
-        .notification-icon {
-            font-size: 20px;
-        }
-        
-        .notification-success {
-            border-left: 4px solid var(--secondary-color);
-        }
-        
-        .notification-success .notification-icon {
-            color: var(--secondary-color);
-        }
-        
-        .notification-error {
-            border-left: 4px solid var(--danger-color);
-        }
-        
-        .notification-error .notification-icon {
-            color: var(--danger-color);
-        }
-        
-        .notification-text {
-            font-weight: 500;
-        }
-        
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .stats-container {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            }
-            
-            .search-input-group {
-                flex-direction: column;
-            }
-            
-            .search-input-group input {
-                border-radius: 8px 8px 0 0;
-            }
-            
-            .search-input-group button {
-                border-radius: 0 0 8px 8px;
-                padding: 12px;
-            }
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        
-        @keyframes scaleIn {
-            from { transform: scale(0.95); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
     </style>
 </head>
 <body>
@@ -753,6 +117,15 @@ $age = $_SESSION['age'];
             <div class="progress-bar-inner" id="calorieProgressBar" style="width: 0%"></div>
         </div>
     </div>
+    <div class="progress-container mt-3">
+        <div class="progress-label">
+            <span>Daily Protein Goal</span>
+            <span id="proteinProgress">0/100 g</span>
+        </div>
+        <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="proteinProgressBar" style="width: 0%; background: linear-gradient(to right, #34d399, #059669);"></div>
+        </div>
+    </div>
     
     <h4 class="mt-4 mb-3">
         <i class="fas fa-clipboard-list me-2"></i>
@@ -794,7 +167,8 @@ $age = $_SESSION['age'];
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 let mealItems = [];
-const calorieGoal = 2000; // Default daily calorie goal
+const calorieGoal = 2000; 
+const proteinGoal = 100;
 
 function showNotification(message, type = 'success') {
     const notification = document.getElementById('notification');
@@ -823,20 +197,26 @@ function updateTotals() {
     document.getElementById("totalCalories").textContent = totalCalories.toFixed(0);
     document.getElementById("totalProtein").textContent = totalProtein.toFixed(1);
     
-    // Update progress bar
-    const percentComplete = Math.min((totalCalories / calorieGoal) * 100, 100);
-    document.getElementById("calorieProgressBar").style.width = `${percentComplete}%`;
+    // Update calorie progress bar
+    const caloriePercent = Math.min((totalCalories / calorieGoal) * 100, 100);
+    const calorieProgressBar = document.getElementById("calorieProgressBar");
+    calorieProgressBar.style.width = `${caloriePercent}%`;
     document.getElementById("calorieProgress").textContent = `${totalCalories.toFixed(0)}/${calorieGoal} kcal`;
     
-    // Change progress bar color based on completion
-    const progressBar = document.getElementById("calorieProgressBar");
-    if (percentComplete > 85) {
-        progressBar.style.background = 'linear-gradient(to right, #f87171, #ef4444)';
-    } else if (percentComplete > 60) {
-        progressBar.style.background = 'linear-gradient(to right, #fbbf24, #f59e0b)';
+    // Change calorie progress bar color based on completion
+    if (caloriePercent > 85) {
+        calorieProgressBar.style.background = 'linear-gradient(to right, #f87171, #ef4444)';
+    } else if (caloriePercent > 60) {
+        calorieProgressBar.style.background = 'linear-gradient(to right, #fbbf24, #f59e0b)';
     } else {
-        progressBar.style.background = 'linear-gradient(to right, #4f46e5, #2563eb)';
+        calorieProgressBar.style.background = 'linear-gradient(to right, #4f46e5, #2563eb)';
     }
+    
+    // Update protein progress bar
+    const proteinPercent = Math.min((totalProtein / proteinGoal) * 100, 100);
+    const proteinProgressBar = document.getElementById("proteinProgressBar");
+    proteinProgressBar.style.width = `${proteinPercent}%`;
+    document.getElementById("proteinProgress").textContent = `${totalProtein.toFixed(1)}/${proteinGoal} g`;
     
     // Show/hide empty state
     document.getElementById('emptyState').style.display = mealItems.length === 0 ? 'block' : 'none';
@@ -978,9 +358,9 @@ document.getElementById("saveMeal").addEventListener("click", function() {
     
     const mealType = document.getElementById("mealType").value;
     const mealData = {
-        type: mealType,
+        mealName: mealType,
         items: mealItems,
-        date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+        mealDate: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
         totalCalories: parseFloat(document.getElementById("totalCalories").textContent),
         totalProtein: parseFloat(document.getElementById("totalProtein").textContent)
     };
@@ -1014,7 +394,7 @@ document.getElementById("saveMeal").addEventListener("click", function() {
                         </div>
                     `;
                     updateTotals();
-                    showNotification('Meal saved successfully!');
+                    showNotification(result.message || 'Meal saved successfully!');
                     loadMealHistory(); // Reload meal history
                 } else {
                     showNotification(result.message || 'Error saving meal', 'error');
@@ -1038,8 +418,10 @@ function loadMealHistory() {
         url: 'get_meal_history.php',
         type: 'GET',
         success: function(response) {
+            console.log("Meal history response:", response);
             try {
-                const history = JSON.parse(response);
+                const history = response; // response is already parsed object
+                console.log("Parsed meal history:", history);
                 const historyTable = document.getElementById('mealHistory');
                 historyTable.innerHTML = '';
                 
@@ -1091,7 +473,49 @@ document.getElementById("closeSidebar").addEventListener("click", function() {
 document.addEventListener('DOMContentLoaded', function() {
     updateTotals();
     loadMealHistory();
+    // Fetch today's nutrition totals and update progress bars
+    fetchTodayNutrition();
 });
+
+// Fetch today's nutrition totals from server
+function fetchTodayNutrition() {
+    $.ajax({
+        url: 'get_today_nutrition.php',
+        type: 'GET',
+        success: function(response) {
+            if (response.error) {
+                console.error('Error fetching today nutrition:', response.error);
+                return;
+            }
+            const totalCalories = response.total_calories || 0;
+            const totalProtein = response.total_protein || 0;
+            
+            // Update calorie progress bar
+            const caloriePercent = Math.min((totalCalories / calorieGoal) * 100, 100);
+            const calorieProgressBar = document.getElementById("calorieProgressBar");
+            calorieProgressBar.style.width = `${caloriePercent}%`;
+            document.getElementById("calorieProgress").textContent = `${totalCalories.toFixed(0)}/${calorieGoal} kcal`;
+            
+            // Change calorie progress bar color based on completion
+            if (caloriePercent > 85) {
+                calorieProgressBar.style.background = 'linear-gradient(to right, #f87171, #ef4444)';
+            } else if (caloriePercent > 60) {
+                calorieProgressBar.style.background = 'linear-gradient(to right, #fbbf24, #f59e0b)';
+            } else {
+                calorieProgressBar.style.background = 'linear-gradient(to right, #4f46e5, #2563eb)';
+            }
+            
+            // Update protein progress bar
+            const proteinPercent = Math.min((totalProtein / proteinGoal) * 100, 100);
+            const proteinProgressBar = document.getElementById("proteinProgressBar");
+            proteinProgressBar.style.width = `${proteinPercent}%`;
+            document.getElementById("proteinProgress").textContent = `${totalProtein.toFixed(1)}/${proteinGoal} g`;
+        },
+        error: function() {
+            console.error('Error fetching today nutrition data');
+        }
+    });
+}
 </script>
 
 </body>

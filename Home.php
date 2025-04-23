@@ -199,9 +199,9 @@ if (isset($_POST['logout'])) {
     </div>
 
     <!-- Footer -->
-    <footer>
+    <!-- <footer>
         <p>&copy; 2025 FitTrack. All rights reserved.</p>
-    </footer>
+    </footer> -->
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
