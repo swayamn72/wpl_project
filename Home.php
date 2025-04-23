@@ -174,7 +174,6 @@ if (isset($_POST['logout'])) {
             <div class="graphHeading">
                 <h4>Progress Graph</h4>
                 <div class="graphBtn">
-                    <button class="graphBtnCommon graphBtnExercise"><span></span>Exercise</button>
                     <button class="graphBtnCommon graphBtnMeals"><span></span>Meals</button>
                     <button class="graphBtnCommon graphBtnSleep"><span></span>Sleep</button>
                 </div>
