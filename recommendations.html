@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Personalized Training Plan</title>
+    <style>
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Reset and base styles */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --primary: #3a7bd5;
+  --primary-dark: #2563eb;
+  --secondary: #6366f1;
+  --accent: #8b5cf6;
+  --light: #f3f4f6;
+  --dark: #1f2937;
+  --success: #10b981;
+  --error: #ef4444;
+  --text-primary: #374151;
+  --text-secondary: #6b7280;
+  --text-light: #9ca3af;
+  --border: #e5e7eb;
+  --background: #ffffff;
+  --background-alt: #f9fafb;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background-alt);
+  color: var(--text-primary);
+  line-height: 1.7;
+  min-height: 100vh;
+  padding-bottom: 60px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Header styles with modern gradient */
+header {
+  background: linear-gradient(120deg, var(--primary), var(--accent));
+  padding: 4rem 0;
+  margin-bottom: 3rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.6;
+}
+
+header .container {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+header h1 {
+  color: white;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  letter-spacing: -0.025em;
+  animation: fadeInDown 1s ease-out;
+}
+
+header p {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto;
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+/* Main content layout */
+.container {
+  display: block;
+}
+
+section {
+  background-color: var(--background);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+section:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+section h2 {
+  font-size: 1.75rem;
+  color: var(--dark);
+  margin-bottom: 1.5rem;
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+}
+
+section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  height: 3px;
+  width: 40px;
+  background-color: var(--accent);
+  border-radius: 3px;
+}
+
+/* Form styling with modern touch */
+.preferences-form {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 1.75rem;
+  position: relative;
+}
+
+.form-group:last-of-type {
+  margin-bottom: 2rem;
+}
+
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.form-group:focus-within label {
+  color: var(--primary);
+}
+
+select, input[type="text"] {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  font-size: 1rem;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background-color: var(--background);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1rem;
+  padding-right: 2.5rem;
+}
+
+select[multiple] {
+  height: auto;
+  min-height: 120px;
+  background-image: none;
+  padding-right: 1rem;
+}
+
+select:focus, input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+small {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Animated button styles */
+button {
+  display: block;
+  width: 100%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(58, 123, 213, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+}
+
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 7px 20px rgba(58, 123, 213, 0.5);
+}
+
+button:hover::before {
+  left: 100%;
+}
+
+button:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 8px rgba(58, 123, 213, 0.4);
+}
+
+/* Training plan section styling */
+.training-plan {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.8s ease-out 0.5s forwards;
+}
+
+#planContent {
+  min-height: 300px;
+  padding: 1.5rem;
+  background-color: var(--background-alt);
+  border-radius: var(--radius);
+  border: 2px dashed var(--border);
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+#planContent:empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+#planContent:empty::before {
+  content: "Complete the form and click generate to see your personalized training plan";
+  text-align: center;
+  padding: 0 1rem;
+  line-height: 1.6;
+}
+
+.print-button {
+  background: linear-gradient(135deg, var(--secondary), var(--accent));
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+
+.print-button:hover {
+  box-shadow: 0 7px 20px rgba(99, 102, 241, 0.5);
+}
+
+/* Responsive design */
+@media (min-width: 768px) {
+  .container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+  
+  section {
+    margin-bottom: 0;
+  }
+  
+  button {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 767px) {
+  header {
+    padding: 3rem 0;
+  }
+  
+  header h1 {
+    font-size: 2.25rem;
+  }
+  
+  header p {
+    font-size: 1.1rem;
+  }
+  
+  section {
+    padding: 1.75rem;
+  }
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(58, 123, 213, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(58, 123, 213, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(58, 123, 213, 0);
+  }
+}
+
+/* Form validation styling */
+select:invalid, input:invalid {
+  border-color: var(--error);
+}
+
+.error-message {
+  color: var(--error);
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  display: none;
+}
+
+select:invalid + .error-message,
+input:invalid + .error-message {
+  display: block;
+  animation: fadeInUp 0.3s ease-out;
+}
+
+/* Additional styling for a professional look */
+.form-group {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  top: 3.25rem;
+  right: 1rem;
+  color: var(--text-light);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.form-group:focus-within .input-icon {
+  color: var(--primary);
+}
+
+/* Custom checkbox/radio styling */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.checkbox-option {
+  flex: 1 0 calc(50% - 0.75rem);
+  min-width: 120px;
+}
+
+/* Additional animations for interactive elements */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Loading animation for plan generation */
+.loading {
+  display: none;
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading.active {
+  display: block;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(59, 130, 246, 0.2);
+  border-radius: 50%;
+  border-top-color: var(--primary);
+  animation: spin 1s ease-in-out infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Success message styling */
+.success-message {
+  padding: 1rem;
+  background-color: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid var(--success);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1.5rem;
+  display: none;
+}
+
+.success-message.active {
+  display: block;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Style for generated plan content */
+.plan-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.workout-day {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  background-color: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.workout-day:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+}
+
+.day-title {
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.day-title::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  margin-right: 0.5rem;
+}
+
+.exercise {
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-left: 2px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.exercise:hover {
+  border-left-color: var(--accent);
+  background-color: rgba(99, 102, 241, 0.05);
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Your Personalized Training Plan</h1>
+        <p>Tell us about your fitness goals and preferences to get a customized workout plan</p>
+    </header>
+
+    <div class="container">
+        <section class="preferences-form">
+            <h2>Your Fitness Preferences</h2>
+            <form id="preferencesForm">
+                <div class="form-group">
+                    <label for="fitnessGoal">What is your primary fitness goal?</label>
+                    <select id="fitnessGoal" name="fitnessGoal" required>
+                        <option value="">Select your goal</option>
+                        <option value="weightLoss">Weight Loss</option>
+                        <option value="muscleGain">Muscle Gain</option>
+                        <option value="endurance">Endurance</option>
+                        <option value="toning">Toning/Definition</option>
+                        <option value="general">General Fitness</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fitnessLevel">What is your current fitness level?</label>
+                    <select id="fitnessLevel" name="fitnessLevel" required>
+                        <option value="">Select your level</option>
+                        <option value="beginner">Beginner (New to exercise)</option>
+                        <option value="intermediate">Intermediate (Regular exercise for 3-6 months)</option>
+                        <option value="advanced">Advanced (Consistent training for 1+ years)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="daysPerWeek">How many days per week can you train?</label>
+                    <select id="daysPerWeek" name="daysPerWeek" required>
+                        <option value="">Select days</option>
+                        <option value="2">2 days</option>
+                        <option value="3">3 days</option>
+                        <option value="4">4 days</option>
+                        <option value="5">5 days</option>
+                        <option value="6">6 days</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sessionDuration">How long can each training session last?</label>
+                    <select id="sessionDuration" name="sessionDuration" required>
+                        <option value="">Select duration</option>
+                        <option value="30">30 minutes</option>
+                        <option value="45">45 minutes</option>
+                        <option value="60">60 minutes</option>
+                        <option value="90">90 minutes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="equipment">What equipment do you have access to?</label>
+                    <select id="equipment" name="equipment" required>
+                        <option value="">Select equipment access</option>
+                        <option value="none">Bodyweight only (No equipment)</option>
+                        <option value="minimal">Minimal (Resistance bands, few dumbbells)</option>
+                        <option value="home">Home gym (Various equipment)</option>
+                        <option value="full">Full gym access</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="focusAreas">Any specific body areas you want to focus on? (Select multiple)</label>
+                    <select id="focusAreas" name="focusAreas" multiple size="4">
+                        <option value="upper">Upper Body</option>
+                        <option value="lower">Lower Body</option>
+                        <option value="core">Core</option>
+                        <option value="cardio">Cardiovascular</option>
+                    </select>
+                    <small>Hold Ctrl/Cmd to select multiple options</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="limitations">Do you have any injuries or limitations?</label>
+                    <input type="text" id="limitations" name="limitations" placeholder="E.g., knee injury, lower back pain, etc.">
+                </div>
+
+                <button type="submit" id="generatePlan">Generate My Training Plan</button>
+            </form>
+        </section>
+
+        <section id="trainingPlan" class="training-plan">
+            <h2>Your Personalized Training Plan</h2>
+            <div id="planContent"></div>
+            <button class="print-button" id="printPlan">Print/Save Plan</button>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('preferencesForm');
+            const trainingPlanSection = document.getElementById('trainingPlan');
+            const planContent = document.getElementById('planContent');
+            const printButton = document.getElementById('printPlan');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const goal = document.getElementById('fitnessGoal').value;
+                const level = document.getElementById('fitnessLevel').value;
+                const days = parseInt(document.getElementById('daysPerWeek').value);
+                const duration = parseInt(document.getElementById('sessionDuration').value);
+                const equipment = document.getElementById('equipment').value;
+                
+                // Get selected focus areas
+                const focusSelect = document.getElementById('focusAreas');
+                const focusAreas = Array.from(focusSelect.selectedOptions).map(option => option.value);
+                
+                const limitations = document.getElementById('limitations').value;
+
+                // Generate the training plan
+                const plan = generateTrainingPlan(goal, level, days, duration, equipment, focusAreas, limitations);
+                
+                // Display the plan
+                displayTrainingPlan(plan);
+                
+                // Show the training plan section
+                trainingPlanSection.style.display = 'block';
+                
+                // Scroll to the plan
+                trainingPlanSection.scrollIntoView({ behavior: 'smooth' });
+            });
+
+            printButton.addEventListener('click', function() {
+                window.print();
+            });
+
+            function generateTrainingPlan(goal, level, days, duration, equipment, focusAreas, limitations) {
+                // This function generates the training plan based on user preferences
+                const plan = {
+                    summary: {
+                        goal: goal,
+                        level: level,
+                        daysPerWeek: days,
+                        sessionDuration: duration,
+                        equipment: equipment,
+                        focusAreas: focusAreas,
+                        limitations: limitations
+                    },
+                    schedule: []
+                };
+
+                // Exercise libraries based on equipment availability
+                const exercises = {
+                    none: {
+                        upper: ['Push-ups', 'Tricep dips', 'Plank shoulder taps', 'Superman pulls', 'Pike push-ups'],
+                        lower: ['Squats', 'Lunges', 'Glute bridges', 'Calf raises', 'Split squats'],
+                        core: ['Planks', 'Bicycle crunches', 'Russian twists', 'Mountain climbers', 'Leg raises'],
+                        cardio: ['Jumping jacks', 'High knees', 'Burpees', 'Mountain climbers', 'Jump squats']
+                    },
+                    minimal: {
+                        upper: ['Band rows', 'Dumbbell curls', 'Band pull-aparts', 'Dumbbell press', 'Lateral raises'],
+                        lower: ['Banded squats', 'Dumbbell lunges', 'Banded glute bridges', 'Goblet squats', 'Step-ups'],
+                        core: ['Russian twists with weight', 'Weighted crunches', 'Side plank with band', 'Weighted sit-ups', 'Plank with band pulls'],
+                        cardio: ['Jump rope', 'Kettlebell swings', 'Band resisted sprints', 'Dumbbell thrusters', 'Weighted step-ups']
+                    },
+                    home: {
+                        upper: ['Dumbbell bench press', 'Pull-ups', 'Dumbbell rows', 'Overhead press', 'Face pulls'],
+                        lower: ['Dumbbell squats', 'Romanian deadlifts', 'Bulgarian split squats', 'Leg curls', 'Hip thrusts'],
+                        core: ['Ab wheel rollouts', 'Cable crunches', 'Hanging leg raises', 'Weighted Russian twists', 'Cable woodchoppers'],
+                        cardio: ['Rowing machine', 'Exercise bike', 'Jump rope intervals', 'Circuit training', 'HIIT with equipment']
+                    },
+                    full: {
+                        upper: ['Bench press', 'Lat pulldowns', 'Seated rows', 'Shoulder press', 'Cable tricep extensions'],
+                        lower: ['Barbell squats', 'Leg press', 'Deadlifts', 'Leg extensions', 'Leg curls'],
+                        core: ['Cable crunches', 'Hanging leg raises', 'Decline bench sit-ups', 'Machine rotations', 'Ab machine'],
+                        cardio: ['Treadmill intervals', 'Elliptical', 'Stair climber', 'Rowing machine', 'Assault bike']
+                    }
+                };
+
+                // Generate workout structure based on goals
+                let workoutSplit;
+                let workoutFocus;
+                
+                switch(goal) {
+                    case 'weightLoss':
+                        workoutFocus = 'Full body workouts with high intensity and calorie burn';
+                        workoutSplit = generateWeightLossPlan(days, level, equipment, exercises, focusAreas, duration);
+                        break;
+                    case 'muscleGain':
+                        workoutFocus = 'Progressive overload with adequate rest between muscle groups';
+                        workoutSplit = generateMuscleGainPlan(days, level, equipment, exercises, focusAreas, duration);
+                        break;
+                    case 'endurance':
+                        workoutFocus = 'Higher repetitions and cardiovascular conditioning';
+                        workoutSplit = generateEndurancePlan(days, level, equipment, exercises, focusAreas, duration);
+                        break;
+                    case 'toning':
+                        workoutFocus = 'Moderate weights with higher repetitions for muscle definition';
+                        workoutSplit = generateToningPlan(days, level, equipment, exercises, focusAreas, duration);
+                        break;
+                    case 'general':
+                        workoutFocus = 'Balanced approach to overall fitness';
+                        workoutSplit = generateGeneralFitnessPlan(days, level, equipment, exercises, focusAreas, duration);
+                        break;
+                }
+
+                plan.workoutFocus = workoutFocus;
+                plan.schedule = workoutSplit;
+
+                // Add notes based on limitations
+                if (limitations) {
+                    plan.limitationsNote = `Note: Given your ${limitations}, modify exercises as needed and consider consulting a fitness professional.`;
+                }
+
+                return plan;
+            }
+
+            function generateWeightLossPlan(days, level, equipment, exercises, focusAreas, duration) {
+                const schedule = [];
+                const equipmentExercises = exercises[equipment];
+                
+                // If no focus areas selected, focus on full body and cardio
+                if (focusAreas.length === 0) {
+                    focusAreas = ['upper', 'lower', 'core', 'cardio'];
+                }
+                
+                // Create workouts based on days available
+                for (let i = 1; i <= days; i++) {
+                    const workout = {
+                        day: `Day ${i}`,
+                        exercises: []
+                    };
+                    
+                    // For weight loss, always include some cardio
+                    const cardioMinutes = Math.floor(duration * 0.3); // 30% of workout is cardio
+                    const strengthMinutes = duration - cardioMinutes;
+                    
+                    // Add strength training based on the day's focus
+                    let dayFocus;
+                    if (days <= 3) {
+                        // Full body approach for fewer training days
+                        dayFocus = ['upper', 'lower', 'core'];
+                    } else {
+                        // Split routine for more training days
+                        const rotationIndex = (i - 1) % 4;
+                        dayFocus = [['upper', 'core'], ['lower', 'core'], ['upper', 'cardio'], ['lower', 'cardio']][rotationIndex];
+                    }
+                    
+                    // Filter by user's focus areas if specified
+                    dayFocus = dayFocus.filter(area => focusAreas.includes(area));
+                    
+                    // If nothing matches, use all focus areas
+                    if (dayFocus.length === 0) {
+                        dayFocus = focusAreas;
+                    }
+                    
+                    // Add strength exercises
+                    dayFocus.forEach(area => {
+                        const areaExercises = equipmentExercises[area];
+                        // Get 2-3 exercises depending on level
+                        const exerciseCount = level === 'beginner' ? 2 : 3;
+                        
+                        for (let j = 0; j < exerciseCount; j++) {
+                            if (areaExercises[j]) {
+                                const sets = level === 'beginner' ? '2-3' : level === 'intermediate' ? '3-4' : '4-5';
+                                const reps = '12-15';
+                                workout.exercises.push({
+                                    name: areaExercises[j],
+                                    sets: sets,
+                                    reps: reps,
+                                    type: area
+                                });
+                            }
+                        }
+                    });
+                    
+                    // Add cardio finisher
+                    const cardioOptions = equipmentExercises.cardio;
+                    workout.exercises.push({
+                        name: cardioOptions[Math.floor(Math.random() * cardioOptions.length)],
+                        duration: `${cardioMinutes} minutes`,
+                        type: 'cardio',
+                        note: 'High intensity intervals: 30sec work, 15sec rest'
+                    });
+                    
+                    schedule.push(workout);
+                }
+                
+                // Add rest days
+                for (let i = days + 1; i <= 7; i++) {
+                    schedule.push({
+                        day: `Day ${i}`,
+                        exercises: [{
+                            name: 'Rest Day',
+                            note: 'Active recovery: light walking or stretching recommended'
+                        }]
+                    });
+                }
+                
+                return schedule;
+            }
+
+            function generateMuscleGainPlan(days, level, equipment, exercises, focusAreas, duration) {
+                const schedule = [];
+                const equipmentExercises = exercises[equipment];
+                
+                // Default to all areas if none selected
+                if (focusAreas.length === 0) {
+                    focusAreas = ['upper', 'lower', 'core'];
+                }
+                
+                // Create split based on days available
+                let split;
+                if (days <= 3) {
+                    // Full body approach for 2-3 days
+                    split = Array(days).fill(['upper', 'lower', 'core']);
+                } else if (days === 4) {
+                    // Upper/Lower split twice a week
+                    split = [['upper', 'core'], ['lower', 'core'], ['upper', 'core'], ['lower', 'core']];
+                } else {
+                    // Push/Pull/Legs split
+                    split = [
+                        ['upper'], // Push
+                        ['upper'], // Pull
+                        ['lower', 'core'], // Legs
+                        ['upper'], // Push
+                        ['upper'], // Pull
+                        ['lower', 'core'] // Legs
+                    ].slice(0, days);
+                }
+                
+                // Generate workouts
+                for (let i = 0; i < days; i++) {
+                    const workout = {
+                        day: `Day ${i + 1}`,
+                        exercises: []
+                    };
+                    
+                    // Filter areas by user's focus
+                    const dayFocus = split[i].filter(area => focusAreas.includes(area));
+                    
+                    // If nothing matches, use all focus areas
+                    const areasToUse = dayFocus.length > 0 ? dayFocus : focusAreas;
+                    
+                    // Add exercises based on focus and level
+                    areasToUse.forEach(area => {
+                        const areaExercises = equipmentExercises[area];
+                        // Get 3-5 exercises depending on level
+                        const exerciseCount = level === 'beginner' ? 3 : level === 'intermediate' ? 4 : 5;
+                        
+                        for (let j = 0; j < exerciseCount; j++) {
+                            if (areaExercises[j]) {
+                                const sets = level === 'beginner' ? '3' : level === 'intermediate' ? '4' : '5';
+                                const reps = area === 'core' ? '10-15' : '8-12';
+                                workout.exercises.push({
+                                    name: areaExercises[j],
+                                    sets: sets,
+                                    reps: reps,
+                                    type: area,
+                                    note: 'Rest 60-90sec between sets'
+                                });
+                            }
+                        }
+                    });
+                    
+                    // Add minimal cardio for muscle gain
+                    if (level !== 'beginner') {
+                        workout.exercises.push({
+                            name: 'Cool Down Cardio',
+                            duration: '10-15 minutes',
+                            type: 'cardio',
+                            note: 'Low intensity to improve recovery'
+                        });
+                    }
+                    
+                    schedule.push(workout);
+                }
+                
+                // Add rest days
+                for (let i = days + 1; i <= 7; i++) {
+                    schedule.push({
+                        day: `Day ${i}`,
+                        exercises: [{
+                            name: 'Rest Day',
+                            note: 'Focus on nutrition and recovery'
+                        }]
+                    });
+                }
+                
+                return schedule;
+            }
+
+            function generateEndurancePlan(days, level, equipment, exercises, focusAreas, duration) {
+                const schedule = [];
+                const equipmentExercises = exercises[equipment];
+                
+                // For endurance, make sure cardio is included
+                if (!focusAreas.includes('cardio')) {
+                    focusAreas.push('cardio');
+                }
+                
+                // If still empty, add all areas
+                if (focusAreas.length === 1) {
+                    focusAreas = ['upper', 'lower', 'core', 'cardio'];
+                }
+                
+                // Create workouts based on days available
+                for (let i = 1; i <= days; i++) {
+                    const workout = {
+                        day: `Day ${i}`,
+                        exercises: []
+                    };
+                    
+                    // For endurance, cardio takes priority
+                    const cardioMinutes = Math.floor(duration * 0.6); // 60% of workout is cardio
+                    const strengthMinutes = duration - cardioMinutes;
+                    
+                    // Add strength circuit
+                    const rotationIndex = (i - 1) % 3;
+                    const dayFocus = [
+                        ['upper', 'core'],
+                        ['lower', 'core'],
+                        ['upper', 'lower', 'core']
+                    ][rotationIndex].filter(area => focusAreas.includes(area));
+                    
+                    // Add circuit exercises
+                    workout.exercises.push({
+                        name: 'Circuit Training',
+                        duration: `${strengthMinutes} minutes`,
+                        note: 'Perform each exercise for 40 seconds, rest 20 seconds, then move to next exercise. Complete circuit 2-3 times.'
+                    });
+                    
+                    // Add specific exercises to circuit
+                    dayFocus.forEach(area => {
+                        const areaExercises = equipmentExercises[area];
+                        // Get 2 exercises per area
+                        for (let j = 0; j < 2; j++) {
+                            if (areaExercises[j]) {
+                                workout.exercises.push({
+                                    name: areaExercises[j],
+                                    type: area,
+                                    circuit: true
+                                });
+                            }
+                        }
+                    });
+                    
+                    // Add cardio session
+                    const cardioOptions = equipmentExercises.cardio;
+                    const cardioExercise = cardioOptions[Math.floor(Math.random() * cardioOptions.length)];
+                    
+                    let cardioDescription;
+                    if (level === 'beginner') {
+                        cardioDescription = 'Steady state cardio';
+                    } else if (level === 'intermediate') {
+                        cardioDescription = 'Intervals: 2min moderate, 1min intense';
+                    } else {
+                        cardioDescription = 'Intervals: 1min moderate, 1min intense, 30sec max effort';
+                    }
+                    
+                    workout.exercises.push({
+                        name: cardioExercise,
+                        duration: `${cardioMinutes} minutes`,
+                        type: 'cardio',
+                        note: cardioDescription
+                    });
+                    
+                    schedule.push(workout);
+                }
+                
+                // Add active recovery days
+                for (let i = days + 1; i <= 7; i++) {
+                    schedule.push({
+                        day: `Day ${i}`,
+                        exercises: [{
+                            name: 'Active Recovery',
+                            duration: '20-30 minutes',
+                            note: 'Light activity like walking, yoga, or swimming'
+                        }]
+                    });
+                }
+                
+                return schedule;
+            }
+
+            function generateToningPlan(days, level, equipment, exercises, focusAreas, duration) {
+                const schedule = [];
+                const equipmentExercises = exercises[equipment];
+                
+                // Default to all areas if none selected
+                if (focusAreas.length === 0) {
+                    focusAreas = ['upper', 'lower', 'core', 'cardio'];
+                }
+                
+                // Create split based on days available
+                let split;
+                if (days <= 3) {
+                    // Full body approach for fewer days
+                    split = Array(days).fill(['upper', 'lower', 'core', 'cardio']);
+                } else {
+                    // More targeted approach for 4+ days
+                    split = [
+                        ['upper', 'cardio'],
+                        ['lower', 'core'],
+                        ['cardio', 'core'],
+                        ['upper', 'lower'],
+                        ['core', 'cardio'],
+                        ['upper', 'lower']
+                    ].slice(0, days);
+                }
+                
+                // Generate workouts
+                for (let i = 0; i < days; i++) {
+                    const workout = {
+                        day: `Day ${i + 1}`,
+                        exercises: []
+                    };
+                    
+                    // Filter for user's focus areas
+                    const dayFocus = split[i].filter(area => focusAreas.includes(area));
+                    
+                    // If nothing matches, use all focus areas
+                    const areasToUse = dayFocus.length > 0 ? dayFocus : focusAreas;
+                    
+                    // For toning: higher reps, moderate weight, supersets
+                    areasToUse.forEach(area => {
+                        if (area === 'cardio') {
+                            // Add cardio intervals
+                            const cardioOptions = equipmentExercises.cardio;
+                            workout.exercises.push({
+                                name: cardioOptions[Math.floor(Math.random() * cardioOptions.length)],
+                                duration: '15-20 minutes',
+                                type: 'cardio',
+                                note: 'Intervals: 1min high intensity, 1min moderate'
+                            });
+                        } else {
+                            // Add strength exercises
+                            const areaExercises = equipmentExercises[area];
+                            const exerciseCount = level === 'beginner' ? 2 : 3;
+                            
+                            // Create superset pairs
+                            for (let j = 0; j < exerciseCount; j++) {
+                                if (areaExercises[j * 2] && areaExercises[j * 2 + 1]) {
+                                    workout.exercises.push({
+                                        name: `Superset ${j + 1}`,
+                                        sets: level === 'beginner' ? '2' : level === 'intermediate' ? '3' : '4',
+                                        note: 'Complete both exercises back-to-back, then rest 45-60sec'
+                                    });
+                                    
+                                    workout.exercises.push({
+                                        name: areaExercises[j * 2],
+                                        reps: '12-15',
+                                        type: area,
+                                        superset: true
+                                    });
+                                    
+                                    workout.exercises.push({
+                                        name: areaExercises[j * 2 + 1],
+                                        reps: '12-15',
+                                        type: area,
+                                        superset: true
+                                    });
+                                } else if (areaExercises[j]) {
+                                    // Add single exercise if we run out of pairs
+                                    workout.exercises.push({
+                                        name: areaExercises[j],
+                                        sets: level === 'beginner' ? '3' : '4',
+                                        reps: '12-15',
+                                        type: area
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    
+                    schedule.push(workout);
+                }
+                
+                // Add rest/active recovery days
+                for (let i = days + 1; i <= 7; i++) {
+                    schedule.push({
+                        day: `Day ${i}`,
+                        exercises: [{
+                            name: i % 2 === 0 ? 'Rest Day' : 'Active Recovery',
+                            note: i % 2 === 0 ? 'Complete rest to recover' : 'Light activity and stretching'
+                        }]
+                    });
+                }
+                
+                return schedule;
+            }
+
+            function generateGeneralFitnessPlan(days, level, equipment, exercises, focusAreas, duration) {
+                const schedule = [];
+                const equipmentExercises = exercises[equipment];
+                
+                // For general fitness, include all areas by default
+                if (focusAreas.length === 0) {
+                    focusAreas = ['upper', 'lower', 'core', 'cardio'];
+                }
+                
+                // Create a balanced weekly schedule
+                for (let i = 1; i <= days; i++) {
+                    const workout = {
+                        day: `Day ${i}`,
+                        exercises: []
+                    };
+                    
+                    // Different focus each day for variety
+                    let dayFocus;
+                    if (days <= 3) {
+                        // Full body approach with different emphasis
+                        const emphasis = ['upper', 'lower', 'cardio'][i % 3];
+                        dayFocus = focusAreas.includes(emphasis) ? 
+                            [...focusAreas.filter(a => a === emphasis), ...focusAreas.filter(a => a !== emphasis)] :
+                            focusAreas;
+                    } else {
+                        // More targeted approach
+                        const rotations = [
+                            ['upper', 'core'],
+                            ['lower', 'cardio'],
+                            ['cardio', 'core'],
+                            ['upper', 'lower'],
+                            ['cardio', 'upper'],
+                            ['lower', 'core']
+                        ];
+                        dayFocus = rotations[(i - 1) % 6].filter(area => focusAreas.includes(area));
+                        
+                        // If nothing matches, use all focus areas
+                        if (dayFocus.length === 0) {
+                            dayFocus = focusAreas;
+                        }
+                    }
+                    
+                    // Add strength training
+                    dayFocus.forEach(area => {
+                        if (area !== 'cardio') {
+                            const areaExercises = equipmentExercises[area];
+                            const exerciseCount = level === 'beginner' ? 2 : level === 'intermediate' ? 3 : 4;
+                            
+                            for (let j = 0; j < exerciseCount; j++) {
+                                if (areaExercises[j]) {
+                                    const sets = level === 'beginner' ? '2-3' : level === 'intermediate' ? '3' : '3-4';
+                                    const reps = '10-12';
+                                    workout.exercises.push({
+                                        name: areaExercises[j],
+                                        sets: sets,
+                                        reps: reps,
+                                        type: area
+                                    });
+                                }
+                            }
+                        } else {
+                            // Add cardio
+                            const cardioOptions = equipmentExercises.cardio;
+                            const cardioTime = Math.floor(duration * 0.3); // 30% of workout for cardio
+                            
+                            workout.exercises.push({
+                                name: cardioOptions[Math.floor(Math.random() * cardioOptions.length)],
+                                duration: `${cardioTime} minutes`,
+                                type: 'cardio',
+                                note: level === 'beginner' ? 'Moderate intensity' : 'Mix of moderate and high intensity intervals'
+                            });
+                        }
+                    });
+                    
+                    schedule.push(workout);
+                }
+                
+                // Add active recovery and rest days
+                for (let i = days + 1; i <= 7; i++) {
+                    schedule.push({
+                        day: `Day ${i}`,
+                        exercises: [{
+                            name: i === 7 ? 'Rest Day' : 'Active Recovery',
+                            note: i === 7 ? 'Complete rest to recover' : 'Light activity, mobility work, and stretching'
+                        }]
+                    });
+                }
+                
+                return schedule;
+            }
+
+            function displayTrainingPlan(plan) {
+                // Clear previous content
+                planContent.innerHTML = '';
+                
+                // Map goal values to readable names
+                const goalNames = {
+                    'weightLoss': 'Weight Loss',
+                    'muscleGain': 'Muscle Gain',
+                    'endurance': 'Endurance',
+                    'toning': 'Toning/Definition',
+                    'general': 'General Fitness'
+                };
+                
+                // Map level values to readable names
+                const levelNames = {
+                    'beginner': 'Beginner',
+                    'intermediate': 'Intermediate',
+                    'advanced': 'Advanced'
+                };
+                
+                // Map equipment values to readable names
+                const equipmentNames = {
+                    'none': 'Bodyweight only',
+                    'minimal': 'Minimal equipment',
+                    'home': 'Home gym',
+                    'full': 'Full gym'
+                };
+                
+                // Create summary section
+                const summary = document.createElement('div');
+                summary.className = 'plan-summary';
+                summary.innerHTML = `
+                    <h3>Plan Summary</h3>
+                    <p><strong>Goal:</strong> ${goalNames[plan.summary.goal]}</p>
+                    <p><strong>Focus:</strong> ${plan.workoutFocus}</p>
+                    <p><strong>Level:</strong> ${levelNames[plan.summary.level]}</p>
+                    <p><strong>Days per week:</strong> ${plan.summary.daysPerWeek}</p>
+                    <p><strong>Session duration:</strong> ${plan.summary.sessionDuration} minutes</p>
+                    <p><strong>Equipment:</strong> ${equipmentNames[plan.summary.equipment]}</p>
+                `;
+                
+                // Add focus areas if selected
+                if (plan.summary.focusAreas && plan.summary.focusAreas.length > 0) {
+                    const focusAreaMap = {
+                        'upper': 'Upper Body',
+                        'lower': 'Lower Body',
+                        'core': 'Core',
+                        'cardio': 'Cardiovascular'
+                    };
+                    
+                    const focusAreas = plan.summary.focusAreas.map(area => focusAreaMap[area]).join(', ');
+                    summary.innerHTML += `<p><strong>Focus areas:</strong> ${focusAreas}</p>`;
+                }
+                
+                // Add limitations note if any
+                if (plan.limitationsNote) {
+                    const limitationsNote = document.createElement('div');
+                    limitationsNote.className = 'limitations-note';
+                    limitationsNote.innerHTML = `<p class="equipment-note">${plan.limitationsNote}</p>`;
+                    summary.appendChild(limitationsNote);
+                }
+                
+                planContent.appendChild(summary);
+                
+                // Create weekly schedule
+                const weeklySchedule = document.createElement('div');
+                weeklySchedule.className = 'weekly-schedule';
+                weeklySchedule.innerHTML = '<h3>Weekly Schedule</h3>';
+                
+                // Add each day's workout
+                plan.schedule.forEach(day => {
+                    const dayElement = document.createElement('div');
+                    dayElement.className = 'day-plan';
+                    
+                    // Day header
+                    dayElement.innerHTML = `<h3>${day.day}</h3>`;
+                    
+                    // Check if it's a rest/recovery day
+                    if (day.exercises.length === 1 && (day.exercises[0].name === 'Rest Day' || day.exercises[0].name === 'Active Recovery')) {
+                        const restDay = document.createElement('div');
+                        restDay.className = 'rest-day';
+                        restDay.innerHTML = `
+                            <p><strong>${day.exercises[0].name}</strong></p>
+                            <p class="equipment-note">${day.exercises[0].note || ''}</p>
+                        `;
+                        dayElement.appendChild(restDay);
+                    } else {
+                        // Regular workout day
+                        let currentSuperset = null;
+                        let circuitSection = null;
+                        
+                        day.exercises.forEach(exercise => {
+                            // Check if this is part of a circuit
+                            if (exercise.name === 'Circuit Training') {
+                                circuitSection = document.createElement('div');
+                                circuitSection.className = 'circuit-section';
+                                circuitSection.innerHTML = `
+                                    <p><strong>Circuit Training</strong> (${exercise.duration})</p>
+                                    <p class="equipment-note">${exercise.note || ''}</p>
+                                    <div class="circuit-exercises"></div>
+                                `;
+                                dayElement.appendChild(circuitSection);
+                                return;
+                            }
+                            
+                            // Add circuit exercises to circuit section
+                            if (exercise.circuit && circuitSection) {
+                                const circuitExercise = document.createElement('div');
+                                circuitExercise.className = 'circuit-exercise';
+                                
+                                let typeClass = '';
+                                if (exercise.type) {
+                                    typeClass = `type-${exercise.type}`;
+                                }
+                                
+                                circuitExercise.innerHTML = `
+                                    <p class="${typeClass}"><strong>${exercise.name}</strong></p>
+                                `;
+                                
+                                circuitSection.querySelector('.circuit-exercises').appendChild(circuitExercise);
+                                return;
+                            }
+                            
+                            // Handle supersets
+                            if (exercise.name && exercise.name.includes('Superset')) {
+                                currentSuperset = document.createElement('div');
+                                currentSuperset.className = 'superset';
+                                currentSuperset.innerHTML = `
+                                    <p><strong>${exercise.name}</strong> - ${exercise.sets} sets</p>
+                                    <p class="equipment-note">${exercise.note || ''}</p>
+                                    <div class="superset-exercises"></div>
+                                `;
+                                dayElement.appendChild(currentSuperset);
+                                return;
+                            }
+                            
+                            // Add superset exercises
+                            if (exercise.superset && currentSuperset) {
+                                const supersetExercise = document.createElement('div');
+                                supersetExercise.className = 'superset-exercise';
+                                
+                                let typeClass = '';
+                                if (exercise.type) {
+                                    typeClass = `type-${exercise.type}`;
+                                }
+                                
+                                supersetExercise.innerHTML = `
+                                    <p class="${typeClass}"><strong>${exercise.name}</strong> - ${exercise.reps} reps</p>
+                                `;
+                                
+                                currentSuperset.querySelector('.superset-exercises').appendChild(supersetExercise);
+                                return;
+                            }
+                            
+                            // Regular exercise
+                            const exerciseElement = document.createElement('div');
+                            exerciseElement.className = 'exercise';
+                            
+                            let typeClass = '';
+                            if (exercise.type) {
+                                typeClass = `type-${exercise.type}`;
+                            }
+                            
+                            // Format based on whether it's cardio or strength
+                            if (exercise.type === 'cardio') {
+                                exerciseElement.innerHTML = `
+                                    <p class="${typeClass}"><strong>${exercise.name}</strong> - ${exercise.duration}</p>
+                                    ${exercise.note ? `<p class="equipment-note">${exercise.note}</p>` : ''}
+                                `;
+                            } else {
+                                exerciseElement.innerHTML = `
+                                    <p class="${typeClass}"><strong>${exercise.name}</strong>${exercise.sets ? ` - ${exercise.sets} sets` : ''}${exercise.reps ? ` × ${exercise.reps} reps` : ''}</p>
+                                    ${exercise.note ? `<p class="equipment-note">${exercise.note}</p>` : ''}
+                                `;
+                            }
+                            
+                            dayElement.appendChild(exerciseElement);
+                        });
+                    }
+                    
+                    weeklySchedule.appendChild(dayElement);
+                });
+                
+                planContent.appendChild(weeklySchedule);
+                
+                // Add some general notes and recommendations
+                const notes = document.createElement('div');
+                notes.className = 'training-notes';
+                notes.innerHTML = `
+                    <h3>Training Notes</h3>
+                    <ul>
+                        <li>Always start with a 5-10 minute warm-up before each workout.</li>
+                        <li>End each session with 5-10 minutes of stretching.</li>
+                        <li>Stay hydrated throughout your workouts.</li>
+                        <li>Listen to your body - if something hurts (beyond normal muscle fatigue), stop and assess.</li>
+                        <li>Progress gradually by increasing weight, reps, or reducing rest periods as you get stronger.</li>
+                    </ul>
+                `;
+                
+                // Add goal-specific advice
+                switch (plan.summary.goal) {
+                    case 'weightLoss':
+                        notes.innerHTML += `
+                            <h4>Weight Loss Tips</h4>
+                            <ul>
+                                <li>Combine this workout plan with a caloric deficit through nutrition.</li>
+                                <li>Focus on protein intake to preserve muscle mass while losing fat.</li>
+                                <li>Track your progress with measurements and photos, not just scale weight.</li>
+                                <li>Add extra walks throughout your day to increase overall calorie burn.</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'muscleGain':
+                        notes.innerHTML += `
+                            <h4>Muscle Building Tips</h4>
+                            <ul>
+                                <li>Ensure you're in a slight caloric surplus (eat more than you burn).</li>
+                                <li>Aim for 1.6-2.2g of protein per kg of bodyweight daily.</li>
+                                <li>Focus on progressive overload - gradually increasing the weights you lift.</li>
+                                <li>Prioritize recovery with 7-9 hours of sleep each night.</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'endurance':
+                        notes.innerHTML += `
+                            <h4>Endurance Building Tips</h4>
+                            <ul>
+                                <li>Properly fuel your workouts with carbohydrates before training.</li>
+                                <li>Focus on breathing techniques during longer cardio sessions.</li>
+                                <li>Stay consistent with your training schedule.</li>
+                                <li>Gradually increase duration before increasing intensity.</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'toning':
+                        notes.innerHTML += `
+                            <h4>Toning Tips</h4>
+                            <ul>
+                                <li>Maintain a moderate caloric deficit if you want to reduce body fat.</li>
+                                <li>Focus on mind-muscle connection during exercises.</li>
+                                <li>Keep rest periods shorter between sets (30-60 seconds).</li>
+                                <li>Consider adding more protein to your diet to support muscle definition.</li>
+                            </ul>
+                        `;
+                        break;
+                    case 'general':
+                        notes.innerHTML += `
+                            <h4>General Fitness Tips</h4>
+                            <ul>
+                                <li>Focus on a balanced diet with plenty of whole foods.</li>
+                                <li>Try tracking your workouts to see progress over time.</li>
+                                <li>Mix up your routine every 4-6 weeks to prevent plateaus.</li>
+                                <li>Include mobility work in your weekly routine for better movement quality.</li>
+                            </ul>
+                        `;
+                        break;
+                }
+                
+                planContent.appendChild(notes);
+                
+                // Add disclaimer
+                const disclaimer = document.createElement('div');
+                disclaimer.className = 'disclaimer';
+                disclaimer.innerHTML = `
+                    <p class="equipment-note">Disclaimer: This workout plan is generated based on the information you provided. 
+                    It's always recommended to consult with a healthcare professional before starting a new exercise program, 
+                    especially if you have any health conditions or injuries.</p>
+                `;
+                planContent.appendChild(disclaimer);
+            }
+        });
+    </script>
+</body>
+</html>

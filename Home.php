@@ -165,7 +165,7 @@ if (isset($_POST['logout'])) {
                 <div class="card1"><a href="weekexercise.html">My Workouts</a></div>
                 <div class="card2"><a href="meal2.php">My Meals</a></div>
                 <div class="card3"><a href="sleep.php">Sleep</a></div>
-                <div class="card4"><a href="health.php">Health</a></div>
+                <div class="card4"><a href="recommendations.html">Create a Plan</a></div>
 
 
             </div>
